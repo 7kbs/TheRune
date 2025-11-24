@@ -306,7 +306,7 @@ public class GameMgr : MonoBehaviour
     ///Äü½½·Ô 
     public void UpdateQuickSlotsCount(ItemBase potion)
     {
-        int count = itemData.ItemDict.ContainsKey(potion) ? itemData.ItemDict[potion] : 0;
+        int count = itemData.ItemDictionary.ContainsKey(potion) ? itemData.ItemDictionary[potion] : 0;
 
         for (int i = 0; i < userData.quickSlots.Length; i++)
         {
@@ -324,7 +324,7 @@ public class GameMgr : MonoBehaviour
 
             if (slotData.potion != null)
             {
-                int count = itemData.ItemDict.ContainsKey(slotData.potion) ? itemData.ItemDict[slotData.potion] : 0;
+                int count = itemData.ItemDictionary.ContainsKey(slotData.potion) ? itemData.ItemDictionary[slotData.potion] : 0;
                 quickSlotUIs[i].Assign(slotData.potion, count);
             }
             else

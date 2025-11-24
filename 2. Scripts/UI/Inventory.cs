@@ -94,7 +94,7 @@ public class Inventory : MonoBehaviour
     {
         int slotIndex = 0;
 
-        foreach (var kvp in itemData.ItemDict)
+        foreach (var kvp in itemData.ItemDictionary)
         {
             var item = kvp.Key;
             int count = kvp.Value;
@@ -125,9 +125,9 @@ public class Inventory : MonoBehaviour
 
     public void OnSlotClick(int slotIndex)
     {
-        if (slotIndex >= itemData.ItemDict.Count) return;
+        if (slotIndex >= itemData.ItemDictionary.Count) return;
 
-        var itemArray = itemData.ItemDict.ToArray();
+        var itemArray = itemData.ItemDictionary.ToArray();
         var item = itemArray[slotIndex].Key;
         int count = itemArray[slotIndex].Value;
 
@@ -192,7 +192,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        int count = itemData.ItemDict.ContainsKey(potion) ? itemData.ItemDict[potion] : 0;
+        int count = itemData.ItemDictionary.ContainsKey(potion) ? itemData.ItemDictionary[potion] : 0;
 
         // UserDataø° SO ¿˙¿Â
         userData.quickSlots[slotIndex].potion = potion;

@@ -1,31 +1,34 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "PlayerItemData", menuName = "ScriptableObject/Item")]
 public class ItemData : ScriptableObject
 {
-    [Header("Item Pool (Inspector)")]
-    public List<ItemBase> allItems = new(); // 전체 아이템 풀, 에셋에서 등록
+    [Header("게임에 존재하는 모든 아이템 데이터")]
+    public List<ItemBase> allItems = new();
+    [SerializeField] string resourcesPath = "Item SO";
 
-    [Header("Player Inventory")]
-    public List<InventoryItem> inventoryItems = new(); // 플레이어가 가진 아이템, 인스펙터 표시
-    [NonSerialized] public Dictionary<ItemBase, int> ItemDict = new(); // 런타임 최적화
+    [Header("인벤토리 데이터")]
+    public List<InventoryItem> invenItems = new(); // 플레이어가 가진 아이템, 인스펙터 표시
+    [NonSerialized] public Dictionary<ItemBase, int> ItemDictionary = new(); // 런타임용도
 
     public event Action OnInventoryChanged;
 
     // 초기화: 모든 아이템 풀을 기반으로 inventoryItems 초기화
     public void InitData()
     {
-        ItemDict.Clear();
-        inventoryItems.Clear();
+        ItemDictionary.Clear();
+        invenItems.Clear();
+        allItems = Resources.LoadAll<ItemBase>(resourcesPath).ToList();
 
         foreach (var item in allItems)
         {
-            ItemDict[item] = 0;
-            inventoryItems.Add(new InventoryItem { item = item, count = 0 });
+            ItemDictionary[item] = 0;
+            invenItems.Add(new InventoryItem { item = item, count = 0 });
         }
 
         OnInventoryChanged?.Invoke();
@@ -34,11 +37,11 @@ public class ItemData : ScriptableObject
     // 리스트 → 딕셔너리 동기화
     public void SyncDictFromList()
     {
-        ItemDict.Clear();
-        foreach (var inv in inventoryItems)
+        ItemDictionary.Clear();
+        foreach (var inv in invenItems)
         {
             if (inv.item != null)
-                ItemDict[inv.item] = inv.count;
+                ItemDictionary[inv.item] = inv.count;
         }
     }
 
@@ -47,17 +50,17 @@ public class ItemData : ScriptableObject
     {
         if (item == null) return;
 
-        if (!ItemDict.ContainsKey(item))
+        if (!ItemDictionary.ContainsKey(item))
         {
-            ItemDict[item] = amount;
-            inventoryItems.Add(new InventoryItem { item = item, count = amount });
+            ItemDictionary[item] = amount;
+            invenItems.Add(new InventoryItem { item = item, count = amount });
         }
         else
         {
-            ItemDict[item] += amount;
-            var inv = inventoryItems.Find(i => i.item == item);
+            ItemDictionary[item] += amount;
+            var inv = invenItems.Find(i => i.item == item);
             if (inv != null)
-                inv.count = ItemDict[item];
+                inv.count = ItemDictionary[item];
         }
 
         OnInventoryChanged?.Invoke();
@@ -66,18 +69,18 @@ public class ItemData : ScriptableObject
     // 아이템 사용
     public bool UseItem(ItemBase item, int amount = 1)
     {
-        if (item == null || !ItemDict.ContainsKey(item) || ItemDict[item] < amount)
+        if (item == null || !ItemDictionary.ContainsKey(item) || ItemDictionary[item] < amount)
             return false;
 
-        ItemDict[item] -= amount;
-        var inv = inventoryItems.Find(i => i.item == item);
+        ItemDictionary[item] -= amount;
+        var inv = invenItems.Find(i => i.item == item);
         if (inv != null)
-            inv.count = ItemDict[item];
+            inv.count = ItemDictionary[item];
 
-        if (ItemDict[item] <= 0)
+        if (ItemDictionary[item] <= 0)
         {
-            ItemDict.Remove(item);
-            inventoryItems.RemoveAll(i => i.item == item);
+            ItemDictionary.Remove(item);
+            invenItems.RemoveAll(i => i.item == item);
         }
 
         OnInventoryChanged?.Invoke();
@@ -89,10 +92,10 @@ public class ItemData : ScriptableObject
     {
         if (item == null) return;
 
-        if (ItemDict.ContainsKey(item))
+        if (ItemDictionary.ContainsKey(item))
         {
-            ItemDict.Remove(item);
-            inventoryItems.RemoveAll(i => i.item == item);
+            ItemDictionary.Remove(item);
+            invenItems.RemoveAll(i => i.item == item);
             OnInventoryChanged?.Invoke();
         }
     }

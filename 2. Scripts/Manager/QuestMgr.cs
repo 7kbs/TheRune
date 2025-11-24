@@ -6,7 +6,7 @@ using UnityEngine;
 public class QuestMgr : MonoBehaviour
 {
     private UserData userData;
-    [SerializeField] private string resourcesPath = "Quest SO"; // Resources 경로
+    [SerializeField] string resourcesPath = "Quest SO"; // Resources 경로
     public static QuestMgr inst;
 
     void Awake()
@@ -47,11 +47,7 @@ public class QuestMgr : MonoBehaviour
     /// 퀘스트 리스트가 없으면 Resources에서 SO를 읽어 채운다 (지연 초기화)
     public void EnsureQuestList()
     {
-        if (userData == null)
-        {
-            Debug.LogError("[QuestMgr] userData is null. Make sure DataMgr is initialized first.");
-            return;
-        }
+        if (userData == null) return;
 
         if (userData.questProgressList == null)
             userData.questProgressList = new List<QuestList>();

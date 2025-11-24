@@ -10,11 +10,11 @@ public class SkillParts : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     private RectTransform dragRect;
     private Image dragImg;
-    private SkillMgr mgr;
+    private SkillUIMgr mgr;
 
     void Start()
     {
-        mgr = SkillMgr.inst;
+        mgr = SkillUIMgr.inst;
         if (mgr?.DragIconObj != null)
         {
             dragRect = mgr.DragIconObj.GetComponent<RectTransform>();

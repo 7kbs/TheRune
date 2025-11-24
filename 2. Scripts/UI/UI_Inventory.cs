@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_Inventory : MonoBehaviour
 {
-    [SerializeField] private ItemData itemData;
+    [SerializeField] private ItemData itemData;     //긁어올 item DataBase Storage
     [SerializeField] private Transform slotParent; // 슬롯 50개 존재
     [SerializeField] private GameObject partPrefab;
     [SerializeField] private Canvas mainCanvas; // 마우스 아이콘 표시용
@@ -66,17 +67,40 @@ public class UI_Inventory : MonoBehaviour
 
     public void Refresh()
     {
+        // 1) 모든 슬롯 일단 sync만 한다 (데이터 유지)
         foreach (var part in parts)
-            part.Init(null, 0);
-
-        int i = 0;
-        foreach (var kv in itemData.ItemDict)
         {
-            if (kv.Key is SpiritPiece) continue;
-            if (i >= parts.Count) break;
+            if (part.data == null) continue;
 
-            parts[i].Init(kv.Key, kv.Value);
-            i++;
+            if (itemData.ItemDictionary.TryGetValue(part.data, out int count))
+            {
+                part.Init(part.data, count);
+            }
+            else
+            {
+                // 해당 아이템이 dict에 없다 = 0개
+                part.Init(null, 0);
+            }
+        }
+
+        // 2) dict에 있는데 UI에 없는 아이템을 추가
+        foreach (var kv in itemData.ItemDictionary)
+        {
+            var item = kv.Key;
+            var count = kv.Value;
+
+            if (count <= 0) continue;
+
+            // Skip: 이미 슬롯에 존재하는 아이템
+            bool exists = parts.Any(p => p.data == item);
+            if (exists) continue;
+
+            // Empty slot 찾아서 배치
+            var empty = parts.FirstOrDefault(p => p.data == null);
+            if (empty != null)
+            {
+                empty.Init(item, count);
+            }
         }
     }
 

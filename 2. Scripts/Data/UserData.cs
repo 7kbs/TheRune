@@ -28,17 +28,26 @@ public class QuestList
 [CreateAssetMenu(fileName = "Player", menuName = "ScriptableObject/UserData")]
 public class UserData : ScriptableObject
 {
+    [Header ("Player Stat")]
     public float PlayerMaxHp;  //플레이어 최대 체력
     public float PlayerMaxMp;   //플레이어 최대 마력
     public float PlayerHp;      //현재 체력 (껐다가 켜도 유지되도록..)
     public float PlayerMp;      //현재 마나 (껐다가 켜도 유지되도록..)
     public int GameMoney;
+    [Space(20f)]
 
+    [Header ("Position")]
     public int sceneType;       //유저가 껐다가 킬때 저장될 SceneType
     public Vector3 playerSavePos;   //유저가 껐다가 켤때 저장된 플레이어 위치변수
+    [Space(20f)]
 
+    [Header("게임에 존재하는 모든스킬")]
     public List<SkillData> allSkills = new List<SkillData>();   // 게임 내 전체 스킬 목록 (Resources/Skill)
+
+    [Header("플레이어가 현재 획득한 스킬")]
     public List<SkillData> LearnedSkills = new List<SkillData>(); // 유저가 배운 스킬
+
+    [Header("키셋팅에 할당된 스킬")]
     public SkillData[] SkillSlots = new SkillData[3];
 
     [Header("퀵슬롯")]
@@ -49,10 +58,10 @@ public class UserData : ScriptableObject
     /// 대사 리팩토링
 
 
-    [Header("퀘스트 관리")]
+    [Header("전체 퀘스트 관리")]
     public List<QuestList> questProgressList = new List<QuestList>();
     [NonSerialized] public QuestList currentQuest = null;
-    [Header("현재 진행중인 퀘스트 (읽기 전용)")]
+    [Header("현재 진행중인 퀘스트")]
     public QuestData currentQuestSO;
 
 

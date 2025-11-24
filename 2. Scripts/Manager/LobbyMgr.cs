@@ -59,7 +59,7 @@ public class LobbyMgr : MonoBehaviour
             return;
         }
 
-        var runeStone = GameMgr.inst.itemData.ItemDict.Keys.FirstOrDefault(e => e is RuneStone);
+        var runeStone = GameMgr.inst.itemData.ItemDictionary.Keys.FirstOrDefault(e => e is RuneStone);
 
         if (runeStone != null)
         {
