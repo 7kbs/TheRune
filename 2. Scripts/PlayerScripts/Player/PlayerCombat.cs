@@ -17,9 +17,10 @@ public class PlayerCombat : MonoBehaviour
     [Header("스킬 쿨타임 시각 UI")]
     public Image[] skillCooldownImages;
 
-    [Space(20f)]
+    [Space(10f)]
     public bool isStealth;
-    [Space(20f)]
+    public bool isAttacking;
+    [Space(10f)]
 
     [Header("Skill Keys")]
     public KeyCode[] skillKeys = { KeyCode.Z, KeyCode.X, KeyCode.C };
@@ -54,12 +55,7 @@ public class PlayerCombat : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1)) UseQuickSlot(0);
         if (Input.GetKeyDown(KeyCode.Alpha2)) UseQuickSlot(1);
 
-        foreach (var sd in runtimeSkills.ToList())
-        {
-            if (sd is BasicAttackSO ba) ba.RuntimeUpdate(this);
-            else if (sd is StealthSkillSO ss) ss.RuntimeUpdate(this);
-            // 다른 스킬(Stealth, Grenade 등)도 같은 방식으로 확장
-        }
+        foreach (var sd in runtimeSkills.ToList()) sd.RuntimeUpdate(this);
 
         UpdateCooldownUI(); // 매 프레임 UI 업데이트
     }

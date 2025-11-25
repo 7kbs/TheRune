@@ -32,7 +32,7 @@ public class StealthSkillSO : SkillData
         player.RegisterRuntimeSkillUpdate(this);
     }
 
-    public void RuntimeUpdate(PlayerCombat player)
+    public override void RuntimeUpdate(PlayerCombat player)
     {
         if (!isStealthActive) return;
 

@@ -19,4 +19,5 @@ public abstract class SkillData : ScriptableObject
 
     public GameObject skillPrefab;
     public abstract void Execute(PlayerCombat player);
+    public virtual void RuntimeUpdate(PlayerCombat player) { }
 }

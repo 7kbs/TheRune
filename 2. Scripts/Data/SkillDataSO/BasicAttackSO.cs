@@ -11,12 +11,11 @@ public class BasicAttackSO : SkillData
 
     private int fxIndex = 0;
     private GameObject currentFx;
-    private bool isAttacking = false;
     private float attackStartTime;
 
     public override void Execute(PlayerCombat player)
     {
-        if (isAttacking) return;
+        if (player.isAttacking) return;
         if (player.anim == null) return;
 
         // 기본 공격 애니메이션
@@ -31,7 +30,7 @@ public class BasicAttackSO : SkillData
 
         SoundMgr.inst.SFX_Play((int)SoundMgr.SFX_Sound.Sword);
 
-        isAttacking = true;
+        player.isAttacking = true;
         attackStartTime = Time.time;
 
         // 플레이어가 SkillSO Update를 호출할 수 있게 연결
@@ -39,9 +38,9 @@ public class BasicAttackSO : SkillData
     }
 
 
-    public void RuntimeUpdate(PlayerCombat player)
+    public override void RuntimeUpdate(PlayerCombat player)
     {
-        if (!isAttacking) return;
+        if (!player.isAttacking) return;
 
         float elapsed = Time.time - attackStartTime;
 
@@ -53,7 +52,7 @@ public class BasicAttackSO : SkillData
                 Destroy(currentFx);
                 currentFx = null;
             }
-            isAttacking = false;
+            player.isAttacking = false;
         }
 
         // 아래 공격이라면 중력 복구
