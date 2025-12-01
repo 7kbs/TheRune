@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AcornBomb : MonoBehaviour
+public class AcornBomb : MonoBehaviour, ISkillBehaviour
 {
-    Player player;
+    PlayerCombat playercombat;
 
-    public SkillData data;
+    public AcornGrenadeSO so;
     public GameObject ExplotionEffect;
 
     public float blinkDuration; // ±ôºýÀÓ ÀüÃ¼ ½Ã°£
@@ -17,12 +17,32 @@ public class AcornBomb : MonoBehaviour
 
     void Start()
     {
-        player = FindAnyObjectByType<Player>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
 
+        Vector2 throwDir = new Vector2(Random.Range(-0.5f, 0.5f), 1).normalized;
+        GetComponent<Rigidbody2D>().AddForce(throwDir * so.throwforce, ForceMode2D.Impulse);
         StartCoroutine(BlinkAndExplode());
         Invoke("Explode", 2.0f);
+    }
+
+    public void OnExecute(PlayerCombat player, SkillData data, SkillRuntime state)
+    {
+        playercombat = player;
+        player.anim.SetTrigger("attack");
+        SoundMgr.inst.SFX_Play((int)SoundMgr.SFX_Sound.Bomb);
+
+        for (int i = 0; i < so.grenadeCount; i++)
+        {
+            Vector3 spawnPos = player.shootPos.position +
+                new Vector3(Random.Range(-so.positionOffsetRange, so.positionOffsetRange), 0, 0);
+
+            // ÆøÅº ÇÏ³ª »ý¼º
+            GameObject bombObj = Instantiate(so.skillPrefab, spawnPos, Quaternion.identity);
+        }
+        transform.position = playercombat.shootPos.position;
+
+        state.isActive = false;
     }
 
     IEnumerator BlinkAndExplode()
@@ -56,7 +76,7 @@ public class AcornBomb : MonoBehaviour
     void Explode()
     {
         GameObject explosion = Instantiate(ExplotionEffect, transform.position, Quaternion.identity);
-        explosion.GetComponent<Explosion>().Init(player, data.damage);
+        explosion.GetComponent<Explosion>().Init(playercombat, so.damage);
         Destroy(gameObject);
     }
 

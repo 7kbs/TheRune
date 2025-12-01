@@ -2,62 +2,95 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fairy : MonoBehaviour
+public class Fairy : MonoBehaviour, ISkillBehaviour
 {
-    Player player;
-
+    PlayerCombat player;
     public SkillData data;
-    public GameObject FairyAttackObj;
 
-    GameObject playerTr;
-    Vector3 Pos = Vector3.zero;
-    Queue<GameObject> AttackRange = new Queue<GameObject>();
-    
-    float AttackTimer = 0.0f;
+    public GameObject fairyAttackObj;
 
+    private Queue<GameObject> attackTargets = new Queue<GameObject>();
+    private float attackTimer = 0f;
 
-    void Start()
+    void Awake()
     {
-        player = FindAnyObjectByType<Player>();
-
         Destroy(gameObject, data.duration);
-        playerTr = GameObject.FindGameObjectWithTag("Player");
     }
 
+    public void OnExecute(PlayerCombat caster, SkillData skillData, SkillRuntime state)
+    {
+        player = caster;
+
+        if (data.skillPrefab == null)
+        {
+            Debug.LogWarning("Fairy prefab missing");
+            state.isActive = false;
+            return;
+        }
+
+        // Prefab 인스턴스화
+        //var fairyInstance = Instantiate(data.skillPrefab, caster.player.transform.position + new Vector3(0, 3.5f, 0), Quaternion.identity);
+
+        // 스폰된 인스턴스의 Fairy 스크립트 가져오기
+        //var fairyScript = GetComponent<Fairy>();
+        //if (fairyScript != null)
+        //{
+        //    fairyScript.player = player;
+        //    fairyScript.data = data;
+        //    fairyScript.fairyAttackObj = fairyAttackObj;
+        //}
+
+        SoundMgr.inst.SFX_Play((int)SoundMgr.SFX_Sound.Fairy);
+
+        // 즉시형 스킬 → state 종료
+        state.isActive = false;
+
+        // Destroy는 Prefab 인스턴스에만
+        //Object.Destroy(fairyInstance, data.duration);
+    }
 
     void Update()
     {
-        if(AttackRange.Count > 0)
+        // 플레이어 머리 위 따라다님
+        transform.position = player.transform.position + new Vector3(0, 3.5f, 0);
+
+        // 공격
+        if (attackTargets.Count > 0)
         {
-            AttackTimer -= Time.deltaTime;
-            if(AttackTimer <= 0.0f)
+            attackTimer -= Time.deltaTime;
+            if (attackTimer <= 0f)
             {
-                GameObject obj = Instantiate(FairyAttackObj, transform);
-                obj.transform.position = transform.position;
-                FairyAttack fa = obj.GetComponent<FairyAttack>();
-                fa.monsterTr = AttackRange.Peek();
-                AttackTimer = 1.0f;
+                FireAttack();
+                attackTimer = 1f;
             }
         }
+    }
 
-        Pos = new Vector3(playerTr.transform.position.x, playerTr.transform.position.y + 3.5f, 0.0f);
-
-        transform.position = Pos;
+    void FireAttack()
+    {
+        GameObject atk = Instantiate(fairyAttackObj, transform.position, Quaternion.identity);
+        FairyAttack fa = atk.GetComponent<FairyAttack>();
+        if (fa != null)
+        {
+            fa.monsterTr = attackTargets.Peek();
+            fa.damage = data.damage;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Monster" || collision.gameObject.name == "Boss")
+        if (collision.CompareTag("Monster") || collision.name == "Boss")
         {
-            AttackRange.Enqueue(collision.gameObject);
+            attackTargets.Enqueue(collision.gameObject);
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Monster" || collision.gameObject.name == "Boss")
+        if (collision.CompareTag("Monster") || collision.name == "Boss")
         {
-            AttackRange.Dequeue();
+            if (attackTargets.Count > 0)
+                attackTargets.Dequeue();
         }
     }
 }

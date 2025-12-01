@@ -2,19 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Leaf : MonoBehaviour
+public class Leaf : MonoBehaviour, ISkillBehaviour
 {
-    Player player;
     public SkillData data;
     
     float leafSpeed = 30.0f;
-    Rigidbody2D rigid;
 
     Vector2 direction;
     int damage;
 
+    public void OnExecute(PlayerCombat player, SkillData data, SkillRuntime state)
+    {
+        player.anim.SetTrigger("attack");
 
-    public void Init(Player player, int dmg)
+        transform.position = player.shootPos.transform.position;
+
+        Init(player, data.damage);
+
+        state.isActive = false;
+    }
+
+
+    public void Init(PlayerCombat player, int dmg)
     {
         damage = dmg;
         direction = player.transform.localScale.x > 0 ? Vector2.left : Vector2.right;
@@ -22,15 +31,7 @@ public class Leaf : MonoBehaviour
 
     void Awake()
     {
-        player = FindAnyObjectByType<Player>();
-        Init(player, data.damage);
-
         Destroy(gameObject, 2.0f);
-    }
-
-    void Start()
-    {
-        rigid = GetComponent<Rigidbody2D>();
     }
 
     void Update()

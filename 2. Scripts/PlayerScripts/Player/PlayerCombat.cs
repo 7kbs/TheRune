@@ -5,59 +5,47 @@ using UnityEngine.UI;
 
 public class PlayerCombat : MonoBehaviour
 {
-    Player player;
+    [Header("References")]
+    public Player player;
     [HideInInspector] public Animator anim;
     [HideInInspector] public Rigidbody2D rb;
 
-    [Space(20f)]
-    #region Skill Property
-    [Header("스킬 Property")]
+    [Header("Skill Settings")]
     public Transform shootPos;
     public Transform hand;
-    [Header("스킬 쿨타임 시각 UI")]
     public Image[] skillCooldownImages;
-
-    [Space(10f)]
-    public bool isStealth;
-    public bool isAttacking;
-    [Space(10f)]
-
-    [Header("Skill Keys")]
     public KeyCode[] skillKeys = { KeyCode.Z, KeyCode.X, KeyCode.C };
 
-    // SkillData 기반 딕셔너리
-    List<SkillData> runtimeSkills = new List<SkillData>();
-    #endregion
+    [Header("State")]
+    public bool isStealth;
+    public bool isAttacking;
 
-    public void RegisterRuntimeSkillUpdate(SkillData sd)
-    {
-        if (!runtimeSkills.Contains(sd))
-            runtimeSkills.Add(sd);
-    }
-
-    public bool IsPressingDown => Input.GetKey(KeyCode.DownArrow);
+    // 런타임 상태 관리
+    private Dictionary<SkillData, SkillRuntime> skillStates = new();
 
     void Awake()
     {
-        player = GetComponent<Player>();
-        rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
+        // 스킬 사용
         for (int i = 0; i < skillKeys.Length; i++)
         {
             if (Input.GetKeyDown(skillKeys[i]))
                 UseSlotSkill(i);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1)) UseQuickSlot(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) UseQuickSlot(1);
+        // 런타임 스킬 업데이트
+        //foreach (var runtime in skillStates.Values)
+        //{
+        //    if (runtime.isActive)
+        //        runtime.data.RuntimeUpdate(this, runtime);
+        //}
 
-        foreach (var sd in runtimeSkills.ToList()) sd.RuntimeUpdate(this);
-
-        UpdateCooldownUI(); // 매 프레임 UI 업데이트
+        UpdateCooldownUI();
     }
 
     void UpdateCooldownUI()
@@ -65,13 +53,14 @@ public class PlayerCombat : MonoBehaviour
         for (int i = 0; i < skillCooldownImages.Length; i++)
         {
             var slotSkill = GameMgr.inst.userData.SkillSlots[i];
-            if (slotSkill == null) continue;
-            if (skillCooldownImages[i] == null) continue;
+            if (slotSkill == null || skillCooldownImages[i] == null) continue;
 
-            // lastUsedTime과 cooldown은 SO 내부에 있으므로 계산
-            float elapsed = Time.time - slotSkill.lastUsedTime;
-            float fill = Mathf.Clamp01(1 - (elapsed / slotSkill.cooldown));
-            skillCooldownImages[i].fillAmount = fill;
+            if (!skillStates.ContainsKey(slotSkill))
+                skillStates[slotSkill] = new SkillRuntime(slotSkill);
+
+            var state = skillStates[slotSkill];
+            float elapsed = Time.time - state.lastUsedTime;
+            skillCooldownImages[i].fillAmount = Mathf.Clamp01(1 - (elapsed / slotSkill.cooldown));
         }
     }
 
@@ -79,40 +68,31 @@ public class PlayerCombat : MonoBehaviour
     {
         var slotSkill = GameMgr.inst.userData.SkillSlots[slotIndex];
         if (slotSkill == null) return;
-        //if (!skills.ContainsKey(slotSkill)) return;
 
-        slotSkill.Execute(this);
+        if (!skillStates.ContainsKey(slotSkill))
+            skillStates[slotSkill] = new SkillRuntime(slotSkill);
 
-        player.MpBar.fillAmount = GameMgr.inst.userData.PlayerMp / GameMgr.inst.userData.PlayerMaxMp;
-    }
+        var state = skillStates[slotSkill];
 
+        // 쿨타임 체크
+        if (Time.time < state.lastUsedTime + slotSkill.cooldown) return;
 
-    void UseQuickSlot(int index)
-    {
-        var userData = GameMgr.inst.userData;
-        var itemData = GameMgr.inst.itemData;
+        state.lastUsedTime = Time.time;
 
-        if (index < 0 || index >= userData.quickSlots.Length)
-            return;
-
-        ItemBase potion = userData.quickSlots[index].potion;
-
-        if (potion == null) return;
-
-        // 해당 SO 실행
-        potion.Execute(userData, itemData);
-
-        // 수량 감소
-        if (itemData.ItemDictionary.ContainsKey(potion))
+        //slotSkill.Execute(this, state);
+        if (slotSkill.mpCost >= 0)
         {
-            if (itemData.ItemDictionary[potion] <= 0)
+            if (GameMgr.inst.userData.PlayerMp < slotSkill.mpCost)
             {
-                itemData.ItemDictionary[potion] = 0;
-                userData.quickSlots[index].potion = null;
+                state.isActive = false;
+                return;
             }
+            GameMgr.inst.userData.PlayerMp -= slotSkill.mpCost;
+
+            var obj = Instantiate(slotSkill.skillPrefab);
+            obj.GetComponent<ISkillBehaviour>().OnExecute(this, slotSkill, state);
         }
 
-        // UI 반영
-        GameMgr.inst.UpdateQuickSlotsCount(potion);
+        player.MpBar.fillAmount = GameMgr.inst.userData.PlayerMp / GameMgr.inst.userData.PlayerMaxMp;
     }
 }

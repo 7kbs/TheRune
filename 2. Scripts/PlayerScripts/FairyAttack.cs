@@ -10,7 +10,7 @@ public class FairyAttack : MonoBehaviour
     public SkillData data;
 
     float AttackSpeed = 3.0f;
-    int damage;
+    [HideInInspector] public int damage;
 
     Vector3 Dir = Vector3.zero;
     Vector3 monsterPos = Vector3.zero;

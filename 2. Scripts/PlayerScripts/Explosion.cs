@@ -9,7 +9,7 @@ public class Explosion : MonoBehaviour
         Destroy(gameObject, 3f);
     }
 
-    public void Init(Player player, int dmg)
+    public void Init(PlayerCombat player, int dmg)
     {
         damage = dmg;
     }
