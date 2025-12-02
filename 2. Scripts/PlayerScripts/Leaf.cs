@@ -11,15 +11,13 @@ public class Leaf : MonoBehaviour, ISkillBehaviour
     Vector2 direction;
     int damage;
 
-    public void OnExecute(PlayerCombat player, SkillData data, SkillRuntime state)
+    public void OnExecute(PlayerCombat player, SkillData data)
     {
         player.anim.SetTrigger("attack");
 
         transform.position = player.shootPos.transform.position;
 
         Init(player, data.damage);
-
-        state.isActive = false;
     }
 
 

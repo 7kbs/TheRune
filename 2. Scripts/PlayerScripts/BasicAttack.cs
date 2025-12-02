@@ -15,15 +15,9 @@ public class BasicAttack : MonoBehaviour, ISkillBehaviour
     }
 
     // Execute 호출 시 초기화
-    public void OnExecute(PlayerCombat playerCombat, SkillData skillData, SkillRuntime state)
+    public void OnExecute(PlayerCombat playerCombat, SkillData skillData)
     {
         Init(playerCombat, (BasicAttackSO)skillData);
-
-
-        // 런타임 상태 업데이트
-        //state.currentFx = gameObject;
-        //state.isActive = true;
-        //state.startTime = Time.time;
     }
 
     public void Init(PlayerCombat playerCombat, BasicAttackSO skillData)

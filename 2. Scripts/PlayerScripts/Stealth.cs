@@ -4,51 +4,50 @@ public class Stealth : MonoBehaviour, ISkillBehaviour
 {
     PlayerCombat player;
     StealthSkillSO data;
-    SkillRuntime runtime;
     SpriteRenderer[] renderers;
+    float startTime;
 
-    public void OnExecute(PlayerCombat player, SkillData data, SkillRuntime runtime)
+    public void OnExecute(PlayerCombat player, SkillData skillData)
     {
         this.player = player;
-        this.data = (StealthSkillSO)data;
-        this.runtime = runtime;
-
-        runtime.isActive = true;
-        runtime.startTime = Time.time;
+        this.data = (StealthSkillSO)skillData;
 
         renderers = player.GetComponentsInChildren<SpriteRenderer>();
+        startTime = Time.time;
 
-        // 시작
+        // 은신 시작
         player.isStealth = true;
         foreach (var r in renderers)
         {
             var c = r.color;
-            c.a = this.data.transparentAlpha;
+            c.a = data.transparentAlpha;
             r.color = c;
         }
     }
 
     void Update()
     {
-        if (!runtime.isActive)
-            return;
+        if (player == null || data == null) return;
 
-        if (Time.time - runtime.startTime >= data.stealthDuration)
+        if (Time.time - startTime >= data.stealthDuration)
         {
             EndStealth();
         }
     }
 
-    void EndStealth()
+    private void EndStealth()
     {
-        runtime.isActive = false;
-        player.isStealth = false;
+        if (player != null)
+            player.isStealth = false;
 
-        foreach (var r in renderers)
+        if (renderers != null)
         {
-            var c = r.color;
-            c.a = 1f;
-            r.color = c;
+            foreach (var r in renderers)
+            {
+                var c = r.color;
+                c.a = 1f;
+                r.color = c;
+            }
         }
 
         Destroy(gameObject);

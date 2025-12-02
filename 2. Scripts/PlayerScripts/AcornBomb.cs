@@ -26,7 +26,7 @@ public class AcornBomb : MonoBehaviour, ISkillBehaviour
         Invoke("Explode", 2.0f);
     }
 
-    public void OnExecute(PlayerCombat player, SkillData data, SkillRuntime state)
+    public void OnExecute(PlayerCombat player, SkillData data)
     {
         playercombat = player;
         player.anim.SetTrigger("attack");
@@ -41,8 +41,6 @@ public class AcornBomb : MonoBehaviour, ISkillBehaviour
             GameObject bombObj = Instantiate(so.skillPrefab, spawnPos, Quaternion.identity);
         }
         transform.position = playercombat.shootPos.position;
-
-        state.isActive = false;
     }
 
     IEnumerator BlinkAndExplode()

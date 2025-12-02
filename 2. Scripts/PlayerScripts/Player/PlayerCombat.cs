@@ -12,16 +12,12 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("Skill Settings")]
     public Transform shootPos;
-    public Transform hand;
+    public bool isStealth;
     public Image[] skillCooldownImages;
     public KeyCode[] skillKeys = { KeyCode.Z, KeyCode.X, KeyCode.C };
 
-    [Header("State")]
-    public bool isStealth;
-    public bool isAttacking;
-
-    // 런타임 상태 관리
-    private Dictionary<SkillData, SkillRuntime> skillStates = new();
+    // 쿨타임만 관리
+    Dictionary<SkillData, float> lastUsedTimes = new();
 
     void Awake()
     {
@@ -31,66 +27,54 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
-        // 스킬 사용
         for (int i = 0; i < skillKeys.Length; i++)
         {
             if (Input.GetKeyDown(skillKeys[i]))
                 UseSlotSkill(i);
         }
 
-        // 런타임 스킬 업데이트
-        //foreach (var runtime in skillStates.Values)
-        //{
-        //    if (runtime.isActive)
-        //        runtime.data.RuntimeUpdate(this, runtime);
-        //}
-
         UpdateCooldownUI();
     }
 
+    // 스킬 쿨타임 UI 갱신
     void UpdateCooldownUI()
     {
         for (int i = 0; i < skillCooldownImages.Length; i++)
         {
             var slotSkill = GameMgr.inst.userData.SkillSlots[i];
-            if (slotSkill == null || skillCooldownImages[i] == null) continue;
+            if (slotSkill == null || skillCooldownImages[i] == null) continue; // 슬롯 또는 이미지가 없으면 건너뜀
 
-            if (!skillStates.ContainsKey(slotSkill))
-                skillStates[slotSkill] = new SkillRuntime(slotSkill);
+            // 마지막 사용 시간 가져오기 (없으면 -999f로 초기화)
+            float lastUsed = lastUsedTimes.ContainsKey(slotSkill) ? lastUsedTimes[slotSkill] : -999f;
+            float elapsed = Time.time - lastUsed; // 경과 시간 계산
 
-            var state = skillStates[slotSkill];
-            float elapsed = Time.time - state.lastUsedTime;
+            // UI 이미지 fillAmount 업데이트 (0~1 범위로 제한)
             skillCooldownImages[i].fillAmount = Mathf.Clamp01(1 - (elapsed / slotSkill.cooldown));
         }
     }
 
+    // 슬롯 인덱스에 해당하는 스킬 사용
     void UseSlotSkill(int slotIndex)
     {
         var slotSkill = GameMgr.inst.userData.SkillSlots[slotIndex];
-        if (slotSkill == null) return;
+        if (slotSkill == null) return; // 스킬이 없으면 종료
 
-        if (!skillStates.ContainsKey(slotSkill))
-            skillStates[slotSkill] = new SkillRuntime(slotSkill);
+        // 마지막 사용 시간 체크
+        float lastUsed = lastUsedTimes.ContainsKey(slotSkill) ? lastUsedTimes[slotSkill] : -999f;
+        if (Time.time < lastUsed + slotSkill.cooldown) return; // 쿨타임 안끝났으면 종료
 
-        var state = skillStates[slotSkill];
+        lastUsedTimes[slotSkill] = Time.time; // 사용 시간 갱신
 
-        // 쿨타임 체크
-        if (Time.time < state.lastUsedTime + slotSkill.cooldown) return;
-        state.lastUsedTime = Time.time;
+        // MP 부족 체크
+        if (GameMgr.inst.userData.PlayerMp < slotSkill.mpCost) return;
+        GameMgr.inst.userData.PlayerMp -= slotSkill.mpCost; // MP 차감
 
-        if (slotSkill.mpCost >= 0)
-        {
-            if (GameMgr.inst.userData.PlayerMp < slotSkill.mpCost)
-            {
-                state.isActive = false;
-                return;
-            }
-            GameMgr.inst.userData.PlayerMp -= slotSkill.mpCost;
+        // 스킬 Prefab 인스턴스화 후 실행
+        var obj = Instantiate(slotSkill.skillPrefab);
+        var behaviour = obj.GetComponent<ISkillBehaviour>();
+        if (behaviour != null) behaviour.OnExecute(this, slotSkill); // 인터페이스 통해 스킬 실행
 
-            var obj = Instantiate(slotSkill.skillPrefab);
-            obj.GetComponent<ISkillBehaviour>().OnExecute(this, slotSkill, state);
-        }
-
+        // MP 바 UI 업데이트
         player.MpBar.fillAmount = GameMgr.inst.userData.PlayerMp / GameMgr.inst.userData.PlayerMaxMp;
     }
 }

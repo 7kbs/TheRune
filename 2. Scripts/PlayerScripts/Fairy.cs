@@ -17,36 +17,17 @@ public class Fairy : MonoBehaviour, ISkillBehaviour
         Destroy(gameObject, data.duration);
     }
 
-    public void OnExecute(PlayerCombat caster, SkillData skillData, SkillRuntime state)
+    public void OnExecute(PlayerCombat caster, SkillData skillData)
     {
         player = caster;
 
         if (data.skillPrefab == null)
         {
             Debug.LogWarning("Fairy prefab missing");
-            state.isActive = false;
             return;
         }
 
-        // Prefab 인스턴스화
-        //var fairyInstance = Instantiate(data.skillPrefab, caster.player.transform.position + new Vector3(0, 3.5f, 0), Quaternion.identity);
-
-        // 스폰된 인스턴스의 Fairy 스크립트 가져오기
-        //var fairyScript = GetComponent<Fairy>();
-        //if (fairyScript != null)
-        //{
-        //    fairyScript.player = player;
-        //    fairyScript.data = data;
-        //    fairyScript.fairyAttackObj = fairyAttackObj;
-        //}
-
         SoundMgr.inst.SFX_Play((int)SoundMgr.SFX_Sound.Fairy);
-
-        // 즉시형 스킬 → state 종료
-        state.isActive = false;
-
-        // Destroy는 Prefab 인스턴스에만
-        //Object.Destroy(fairyInstance, data.duration);
     }
 
     void Update()
