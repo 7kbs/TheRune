@@ -17,15 +17,11 @@ public class Fairy : MonoBehaviour, ISkillBehaviour
         Destroy(gameObject, data.duration);
     }
 
-    public void OnExecute(PlayerCombat caster, SkillData skillData)
+    public void OnExecute(PlayerCombat player, SkillData skillData)
     {
-        player = caster;
+        this.player = player;
 
-        if (data.skillPrefab == null)
-        {
-            Debug.LogWarning("Fairy prefab missing");
-            return;
-        }
+        if (data.skillPrefab == null) return;
 
         SoundMgr.inst.SFX_Play((int)SoundMgr.SFX_Sound.Fairy);
     }

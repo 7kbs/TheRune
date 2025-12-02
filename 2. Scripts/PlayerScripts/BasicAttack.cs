@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BasicAttack : MonoBehaviour, ISkillBehaviour
 {
-    PlayerCombat playerCombat;
+    PlayerCombat player;
     public BasicAttackSO skillData;
 
     float spawnTime;
@@ -15,20 +15,20 @@ public class BasicAttack : MonoBehaviour, ISkillBehaviour
     }
 
     // Execute 호출 시 초기화
-    public void OnExecute(PlayerCombat playerCombat, SkillData skillData)
+    public void OnExecute(PlayerCombat player, SkillData skillData)
     {
-        Init(playerCombat, (BasicAttackSO)skillData);
+        Init(player, (BasicAttackSO)skillData);
     }
 
-    public void Init(PlayerCombat playerCombat, BasicAttackSO skillData)
+    public void Init(PlayerCombat player, BasicAttackSO skillData)
     {
-        this.playerCombat = playerCombat;
+        this.player = player;
         this.skillData = skillData;
         spawnTime = Time.time;
 
         // 애니메이션
-        if (playerCombat.anim != null)
-            playerCombat.anim.SetTrigger("attack");
+        if (player.anim != null)
+            player.anim.SetTrigger("attack");
 
         // 사운드
         SoundMgr.inst.SFX_Play((int)SoundMgr.SFX_Sound.Sword);
@@ -36,16 +36,16 @@ public class BasicAttack : MonoBehaviour, ISkillBehaviour
 
     void Update()
     {
-        if (playerCombat == null || skillData == null) return;
+        if (player == null || skillData == null) return;
 
-        transform.position = playerCombat.shootPos.position;
-        transform.localScale = playerCombat.transform.localScale;
+        transform.position = player.shootPos.position;
+        transform.localScale = player.transform.localScale;
 
         float elapsed = Time.time - spawnTime;
 
         // 중력 초기화
         if (elapsed >= skillData.gravityResetDelay)
-            playerCombat.rb.gravityScale = 15f;
+            player.rb.gravityScale = 15f;
     }
 
     void OnTriggerEnter2D(Collider2D other)

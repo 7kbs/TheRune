@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AcornBomb : MonoBehaviour, ISkillBehaviour
 {
-    PlayerCombat playercombat;
+    PlayerCombat player;
 
     public AcornGrenadeSO so;
     public GameObject ExplotionEffect;
@@ -28,7 +28,7 @@ public class AcornBomb : MonoBehaviour, ISkillBehaviour
 
     public void OnExecute(PlayerCombat player, SkillData data)
     {
-        playercombat = player;
+        this.player = player;
         player.anim.SetTrigger("attack");
         SoundMgr.inst.SFX_Play((int)SoundMgr.SFX_Sound.Bomb);
 
@@ -40,7 +40,7 @@ public class AcornBomb : MonoBehaviour, ISkillBehaviour
             // ÆøÅº ÇÏ³ª »ý¼º
             GameObject bombObj = Instantiate(so.skillPrefab, spawnPos, Quaternion.identity);
         }
-        transform.position = playercombat.shootPos.position;
+        transform.position = player.shootPos.position;
     }
 
     IEnumerator BlinkAndExplode()
@@ -74,7 +74,7 @@ public class AcornBomb : MonoBehaviour, ISkillBehaviour
     void Explode()
     {
         GameObject explosion = Instantiate(ExplotionEffect, transform.position, Quaternion.identity);
-        explosion.GetComponent<Explosion>().Init(playercombat, so.damage);
+        explosion.GetComponent<Explosion>().Init(player, so.damage);
         Destroy(gameObject);
     }
 

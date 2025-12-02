@@ -7,5 +7,4 @@ public class AcornGrenadeSO : SkillData
 
     public int grenadeCount = 3;
     public float positionOffsetRange = 0.2f;
-    public float[] forceMultiplier = { 0.8f, 0.9f, 1f };
 }
