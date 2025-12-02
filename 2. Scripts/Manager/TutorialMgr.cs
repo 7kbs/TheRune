@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class TutorialMgr : MonoBehaviour
 {
-    public PlayerCtrl playerCtrl;
+    public Player player;
     public Text tutorialText;
     public Image tutorialPanel;
     public Button skipBtn;

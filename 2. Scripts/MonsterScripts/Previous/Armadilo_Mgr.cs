@@ -39,7 +39,7 @@ public class Armadilo_Mgr : MonoBehaviour
         if(collision.gameObject.name == "Player")
         {
             Debug.Log("플레이어 때리기");
-            collision.gameObject.GetComponent<PlayerCtrl>().TakeDamage(10);
+            collision.gameObject.GetComponent<Player>().TakeDamage(10);
         }
     }
 }

@@ -76,10 +76,8 @@ public class PlayerCombat : MonoBehaviour
 
         // 쿨타임 체크
         if (Time.time < state.lastUsedTime + slotSkill.cooldown) return;
-
         state.lastUsedTime = Time.time;
 
-        //slotSkill.Execute(this, state);
         if (slotSkill.mpCost >= 0)
         {
             if (GameMgr.inst.userData.PlayerMp < slotSkill.mpCost)

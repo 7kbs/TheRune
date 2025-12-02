@@ -6,7 +6,7 @@ public class BasicAttack : MonoBehaviour, ISkillBehaviour
     PlayerCombat playerCombat;
     public BasicAttackSO skillData;
 
-    private float spawnTime;
+    float spawnTime;
     HashSet<MonsterBase> hitSet = new HashSet<MonsterBase>();
 
     void Awake()
