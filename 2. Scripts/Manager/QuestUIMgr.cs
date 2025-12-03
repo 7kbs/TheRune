@@ -72,6 +72,22 @@ public class QuestUIMgr : MonoBehaviour
         questClearObjects.SetActive(true);
     }
 
+    public void OnClickOwnQuest(GameObject obj)
+    {
+        Text txt = obj.GetComponentInChildren<Text>();
+        string title = txt.text;
+
+        foreach (var q in userData.questProgressList)
+        {
+            if (q.questSO.questTitle == title)
+            {
+                detailTitleText.text = q.questSO.questTitle;
+                detailText.text = q.questSO.description;
+                questClearObjects.SetActive(false);
+            }
+        }
+    }
+
     public void OnClickReceiveReward()
     {
         var cq = QuestMgr.inst.CurrentQuest();

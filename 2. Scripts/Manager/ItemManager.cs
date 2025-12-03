@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class ItemManager : MonoBehaviour
 {
     public UserData userData;
-    public ItemData itemData;
+    public ItemDB itemData;
 
     [SerializeField] private List<ItemBase> itemAssets; // Inspector에 드래그 (SO들)
 
@@ -33,7 +33,11 @@ public class ItemManager : MonoBehaviour
         itemData.AddItem(item, item.amount);
 
         // 아이템 효과 실행
-        if (!item.Consumable) item.Execute(userData, itemData);
+        if (!item.Consumable)
+        {
+            var iitem = item.reward.GetComponent<IItem>();
+            iitem.OnExcute(userData, item, itemData);
+        }
         else GameMgr.inst.UpdateQuickSlotsCount(item);
 
         // 저장

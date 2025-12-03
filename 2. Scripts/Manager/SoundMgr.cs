@@ -47,33 +47,33 @@ public class SoundMgr : MonoBehaviour
     {
         audioSourceObj[0].volume = BGM_Value;
 
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Title)
+        if (GlobalValue.sceneType == SceneType.Title)
         {
             audioSourceObj[0].clip = BGM_Clip[0];
         }
 
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Opening)
+        if (GlobalValue.sceneType == SceneType.Opening)
         {
             audioSourceObj[0].clip = BGM_Clip[1];
         }
 
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Lobby)
+        if (GlobalValue.sceneType == SceneType.Lobby)
         {
             audioSourceObj[0].clip = BGM_Clip[2];
         }
 
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Game)
+        if (GlobalValue.sceneType == SceneType.Game)
         {
             audioSourceObj[0].clip = BGM_Clip[3];
         }
 
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Boss)
+        if (GlobalValue.sceneType == SceneType.Boss)
         {
             audioSourceObj[0].volume = BGM_Value * 0.7f;            
             audioSourceObj[0].clip = BGM_Clip[4];
         }
 
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Battle)
+        if (GlobalValue.sceneType == SceneType.Battle)
         {
             audioSourceObj[0].clip = BGM_Clip[5];
         }

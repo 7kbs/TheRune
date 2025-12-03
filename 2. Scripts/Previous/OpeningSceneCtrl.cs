@@ -8,13 +8,13 @@ public class OpeningSceneCtrl : MonoBehaviour
     public UserData userData;
     private void Start()
     {
-        GlobalValue.sceneType = GlobalValue.SceneType.Opening;
+        GlobalValue.sceneType = SceneType.Opening;
         SoundMgr.inst.BGM_Play(true);
     }
 
     public void Event_SceneMove()
     {
-        GlobalValue.sceneType = GlobalValue.SceneType.Lobby;
+        GlobalValue.sceneType = SceneType.Lobby;
         userData.OpeningEnd = true;
         
         SceneManager.LoadScene("LobbyScene");

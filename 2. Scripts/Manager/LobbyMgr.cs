@@ -31,7 +31,7 @@ public class LobbyMgr : MonoBehaviour
 
     void Start()
     {
-        GlobalValue.sceneType = GlobalValue.SceneType.Lobby;
+        GlobalValue.sceneType = SceneType.Lobby;
 
         anim = animGroup.GetComponent<Animation>();
 
@@ -59,7 +59,7 @@ public class LobbyMgr : MonoBehaviour
             return;
         }
 
-        var runeStone = GameMgr.inst.itemData.ItemDictionary.Keys.FirstOrDefault(e => e is RuneStone);
+        var runeStone = GameMgr.inst.itemData.ItemDictionary.Keys.FirstOrDefault(e => e is RuneStoneSO);
 
         if (runeStone != null)
         {

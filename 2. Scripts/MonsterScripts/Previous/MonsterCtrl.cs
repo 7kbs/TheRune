@@ -72,13 +72,13 @@ public class MonsterCtrl : MonoBehaviour
         isInvincible = false;
         isDeactivating = false;  // 활성화될 때 비활성화 중이 아님을 표시
 
-        if (GlobalValue.sceneType != GlobalValue.SceneType.Boss)
+        if (GlobalValue.sceneType != SceneType.Boss)
             initialPosition = transform.parent.position;
     }
 
     void OnDisable()
     {
-        if (GlobalValue.sceneType != GlobalValue.SceneType.Boss)
+        if (GlobalValue.sceneType != SceneType.Boss)
         {
             transform.position = transform.parent.position;
             Invoke("ReSpawn", 5.0f);
@@ -120,7 +120,7 @@ public class MonsterCtrl : MonoBehaviour
 
     void Update()
     {
-        if (GlobalValue.sceneType != GlobalValue.SceneType.Boss)
+        if (GlobalValue.sceneType != SceneType.Boss)
         {
             if (!isDeactivating && Vector3.Distance(transform.parent.position, transform.position) > traceRange
                 && !isTrace)
@@ -153,7 +153,7 @@ public class MonsterCtrl : MonoBehaviour
 
         if (curHp <= 0)
         {
-            if (GlobalValue.sceneType == GlobalValue.SceneType.Boss)
+            if (GlobalValue.sceneType == SceneType.Boss)
             {
                 Destroy(gameObject);
             }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class GameMgr : MonoBehaviour
 {
     public UserData userData;       //유저가 저장한 정보를 얻어오는 데이터
-    public ItemData itemData;
+    public ItemDB itemData;
 
     [HideInInspector] public Player player;   
     public GameObject MenuUIPanel;  //메뉴UI판넬
@@ -83,7 +83,7 @@ public class GameMgr : MonoBehaviour
         player = GameObject.Find("Player").GetComponent<Player>();
 
         //로비씬 지도 On
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Lobby)
+        if (GlobalValue.sceneType == SceneType.Lobby)
         {
             if (LobbyMapPanel != null)
             {
@@ -99,7 +99,7 @@ public class GameMgr : MonoBehaviour
         }
 
         //게임씬 지도 On
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Game)
+        if (GlobalValue.sceneType == SceneType.Game)
         {
             if (MiniMapPanel != null)
             {
@@ -143,10 +143,10 @@ public class GameMgr : MonoBehaviour
     {
         switch (GlobalValue.sceneType)
         {
-            case GlobalValue.SceneType.Game:
+            case SceneType.Game:
                 ToggleGameMap();
                 break;
-            case GlobalValue.SceneType.Lobby:
+            case SceneType.Lobby:
                 ToggleLobbyMap();
                 break;
         }
@@ -241,8 +241,8 @@ public class GameMgr : MonoBehaviour
         int payment = (int)(userData.GameMoney * 0.3);
         MinusMoneyText.text = $"{payment}";
 
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Battle
-            || GlobalValue.sceneType == GlobalValue.SceneType.Boss)
+        if (GlobalValue.sceneType == SceneType.Battle
+            || GlobalValue.sceneType == SceneType.Boss)
         {
             GameOverInfoText.text = "다시 도전하시겠습니까?";
             MinusObj.SetActive(false);
@@ -256,14 +256,16 @@ public class GameMgr : MonoBehaviour
 
     public void PlayerRevive()
     {
+        player.anim.SetBool("die", false);
+        isPlayerDie = false;
         PlayerMove.inst.ChangeState(new DefaultState());
 
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Battle)
+        if (GlobalValue.sceneType == SceneType.Battle)
         {
             SceneManager.LoadScene("BattleScene");
             SceneManager.LoadScene("PlayerScene", LoadSceneMode.Additive);
         }
-        else if (GlobalValue.sceneType == GlobalValue.SceneType.Boss)
+        else if (GlobalValue.sceneType == SceneType.Boss)
             SceneManager.LoadScene("BossScene");
         else
         {
@@ -271,15 +273,9 @@ public class GameMgr : MonoBehaviour
             GoldText.text = $"{userData.GameMoney}";
         }
 
-        isPlayerDie = false;
         GameOverPanel.SetActive(false);
 
-        userData.PlayerHp = userData.PlayerMaxHp;
-        userData.PlayerMp = userData.PlayerMaxMp;
-
-        player.HpBar.fillAmount = userData.PlayerHp / userData.PlayerMaxHp;
-        player.MpBar.fillAmount = userData.PlayerMp / userData.PlayerMaxMp;
-        player.anim.SetBool("die", false);
+        InitPlayerSetting();
     }
 
     public void GameOverExitBtnClick()
@@ -290,11 +286,7 @@ public class GameMgr : MonoBehaviour
         userData.playerSavePos.x = 0;
         userData.playerSavePos.y = 0;
 
-        userData.PlayerHp = userData.PlayerMaxHp;
-        userData.PlayerMp = userData.PlayerMaxMp;
-
-        player.HpBar.fillAmount = userData.PlayerHp / userData.PlayerMaxHp;
-        player.MpBar.fillAmount = userData.PlayerMp / userData.PlayerMaxMp;
+        InitPlayerSetting();
     }
 
     public void LoadingPanelOff()
@@ -334,4 +326,13 @@ public class GameMgr : MonoBehaviour
         }
     }
     ///퀵슬롯 
+    
+    void InitPlayerSetting()
+    {
+        userData.PlayerHp = userData.PlayerMaxHp;
+        userData.PlayerMp = userData.PlayerMaxMp;
+
+        player.HpBar.fillAmount = userData.PlayerHp / userData.PlayerMaxHp;
+        player.MpBar.fillAmount = userData.PlayerMp / userData.PlayerMaxMp;
+    }
 }

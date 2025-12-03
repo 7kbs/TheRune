@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class WarpPointInteractable : Interactable
 {
     [SerializeField] string targetScene;
-    [SerializeField] GlobalValue.SceneType targetSceneType;
+    [SerializeField] SceneType targetSceneType;
 
     [SerializeField] QuestData requiredData;
     [SerializeField] QuestData targetData;

@@ -6,7 +6,7 @@ using UnityEngine;
 public class DataMgr : MonoBehaviour
 {
     public UserData userData;
-    public ItemData itemData;
+    public ItemDB itemData;
 
     public static DataMgr inst;
 

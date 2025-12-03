@@ -69,10 +69,9 @@ public class PlayerCombat : MonoBehaviour
         if (GameMgr.inst.userData.PlayerMp < slotSkill.mpCost) return;
         GameMgr.inst.userData.PlayerMp -= slotSkill.mpCost; // MP 차감
 
-        // 스킬 Prefab 인스턴스화 후 실행
+        //스킬 실행
         var obj = Instantiate(slotSkill.skillPrefab);
-        var behaviour = obj.GetComponent<ISkillBehaviour>();
-        if (behaviour != null) behaviour.OnExecute(this, slotSkill); // 인터페이스 통해 스킬 실행
+        obj.GetComponent<ISkill>().OnExecute(this, slotSkill);
 
         // MP 바 UI 업데이트
         player.MpBar.fillAmount = GameMgr.inst.userData.PlayerMp / GameMgr.inst.userData.PlayerMaxMp;

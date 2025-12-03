@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UI_Inventory : MonoBehaviour
 {
-    [SerializeField] private ItemData itemData;     //긁어올 item DataBase Storage
+    [SerializeField] private ItemDB itemData;     //긁어올 item DataBase Storage
     [SerializeField] private Transform slotParent; // 슬롯 50개 존재
     [SerializeField] private GameObject partPrefab;
     [SerializeField] private Canvas mainCanvas; // 마우스 아이콘 표시용

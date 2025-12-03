@@ -36,7 +36,7 @@ public class GameSceneMgr : MonoBehaviour
     void Start()
     {
         DialogueIndex = 0;
-        GlobalValue.sceneType = GlobalValue.SceneType.Game;
+        GlobalValue.sceneType = SceneType.Game;
 
         if (GameMgr.inst.userData.PuzzleClear) NPC_Char.SetActive(false);
         else NPC_Char.SetActive(true);

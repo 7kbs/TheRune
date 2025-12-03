@@ -92,15 +92,15 @@ public class SettingCtrl : MonoBehaviour
         //Debug.Log("ºº¿Ã∫Íπˆ∆∞ ≈¨∏Ø");
         Vector3 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
 
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Lobby) //∏∂¿ªæ¿
+        if (GlobalValue.sceneType == SceneType.Lobby) //∏∂¿ªæ¿
         {           
-            GameMgr.inst.userData.sceneType = 0;
+            GameMgr.inst.userData.sceneType = SceneType.Lobby;
             GameMgr.inst.userData.playerSavePos = playerPos;
         }
 
-        if (GlobalValue.sceneType == GlobalValue.SceneType.Game) //∞‘¿”æ¿
+        if (GlobalValue.sceneType == SceneType.Game) //∞‘¿”æ¿
         {
-            GameMgr.inst.userData.sceneType = 1;
+            GameMgr.inst.userData.sceneType = SceneType.Game;
             GameMgr.inst.userData.playerSavePos = playerPos;
         }
 

@@ -45,7 +45,7 @@ public class UnderBossCtrl : MonoBehaviour
 
     void Start()
     {
-        GlobalValue.sceneType = GlobalValue.SceneType.Battle;
+        GlobalValue.sceneType = SceneType.Battle;
 
         player = GameObject.FindGameObjectWithTag("Player");
         anim = GetComponent<Animator>();

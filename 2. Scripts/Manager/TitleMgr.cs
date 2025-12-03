@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class TitleMgr : MonoBehaviour
 {
     public UserData userData;
-    public ItemData itemData;
+    public ItemDB itemData;
 
     public Button GameStartBtn;
     public Button ExitBtn;
@@ -17,7 +17,7 @@ public class TitleMgr : MonoBehaviour
     void Start()
     {
         DataMgr.inst.LoadData();
-        GlobalValue.sceneType = GlobalValue.SceneType.Title;
+        GlobalValue.sceneType = SceneType.Title;
 
         if (GameStartBtn != null)
             GameStartBtn.onClick.AddListener(StartBtnClick);
@@ -35,21 +35,21 @@ public class TitleMgr : MonoBehaviour
     {
         if (userData.OpeningEnd == false)
         {
-            GlobalValue.sceneType = GlobalValue.SceneType.Opening;
+            GlobalValue.sceneType = SceneType.Opening;
             SceneManager.LoadScene("OpeningScene");
         }
         else
         {
-            if (userData.sceneType == 0)
+            if (userData.sceneType == SceneType.Title)
             {
-                GlobalValue.sceneType = GlobalValue.SceneType.Lobby;
+                GlobalValue.sceneType = SceneType.Lobby;
                 SceneManager.LoadScene("LobbyScene");
                 SceneManager.LoadScene("PlayerScene", LoadSceneMode.Additive);
             }
-            if(userData.sceneType == 1)
+            else
             {
-                GlobalValue.sceneType = GlobalValue.SceneType.Game;
-                SceneManager.LoadScene("GameScene");
+                var scene = userData.sceneType;
+                SceneManager.LoadScene($"{scene}" + "Scene");
                 SceneManager.LoadScene("PlayerScene", LoadSceneMode.Additive);
             }
         }

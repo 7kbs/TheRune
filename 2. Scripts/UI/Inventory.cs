@@ -72,7 +72,7 @@ public class Inventory : MonoBehaviour
     int selectedQuickSlot = -1;
 
     UserData userData;
-    ItemData itemData;
+    ItemDB itemData;
 
     ItemBase selectedPotion = null;
     public bool registerMode = false;
@@ -100,7 +100,7 @@ public class Inventory : MonoBehaviour
             int count = kvp.Value;
 
             if (count <= 0) continue;
-            if (item is SpiritPiece) continue; // 표시 제외
+            if (item is SpiritPieceSO) continue; // 표시 제외
 
             if (slotIndex >= slots.Length) break;
 

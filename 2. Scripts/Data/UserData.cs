@@ -31,13 +31,13 @@ public class UserData : ScriptableObject
     [Header ("Player Stat")]
     public float PlayerMaxHp;  //플레이어 최대 체력
     public float PlayerMaxMp;   //플레이어 최대 마력
-    public float PlayerHp;      //현재 체력 (껐다가 켜도 유지되도록..)
-    public float PlayerMp;      //현재 마나 (껐다가 켜도 유지되도록..)
+    public float PlayerHp;      //현재 체력
+    public float PlayerMp;      //현재 마나
     public int GameMoney;
     [Space(20f)]
 
     [Header ("Position")]
-    public int sceneType;       //유저가 껐다가 킬때 저장될 SceneType
+    public SceneType sceneType;       //유저가 껐다가 킬때 저장될 SceneType
     public Vector3 playerSavePos;   //유저가 껐다가 켤때 저장된 플레이어 위치변수
     [Space(20f)]
 
@@ -88,19 +88,16 @@ public class UserData : ScriptableObject
         PlayerMp = 100;
         GameMoney = 5000;
 
-        sceneType = 0;
+        sceneType = SceneType.Title;
         playerSavePos = Vector3.zero;
 
         // 전체 스킬 불러오기
-        allSkills = Resources.LoadAll<SkillData>("Skills").ToList();
+        allSkills = Resources.LoadAll<SkillData>("Skill SO").ToList();
 
         // 기본 스킬 지정 (이름 또는 ID로 필터)
         LearnedSkills.Clear();
         SkillData basicSkill = allSkills.FirstOrDefault(s => s.skillID == "BasicAttack");
-        if (basicSkill != null)
-            LearnedSkills.Add(basicSkill);
-        else
-            Debug.LogWarning("기본 스킬(Basic)을 찾을 수 없습니다. Skills 폴더 확인 요망.");
+        if (basicSkill != null) LearnedSkills.Add(basicSkill);
 
         // 스킬 슬롯 초기화
         for (int i = 0; i < SkillSlots.Length; i++) SkillSlots[i] = null;

@@ -48,7 +48,7 @@ public class BossMapMgr : MonoBehaviour
             player.transform.position = new Vector3(-104.0f, -1.3f, 0.0f);
 
         boss = FindAnyObjectByType<MoroKhan>();
-        GlobalValue.sceneType = GlobalValue.SceneType.Boss;
+        GlobalValue.sceneType = SceneType.Boss;
     }
 
     void Update()
