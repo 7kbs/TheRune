@@ -13,8 +13,9 @@ public class UI_Inventory : MonoBehaviour
     private List<Inventory_Parts> parts = new();
     private Inventory_Parts selectedPart = null;
 
-    private Image dragIcon;
-    private RectTransform dragRect;
+    [SerializeField] private Image dragIcon;
+    [SerializeField] private Text dragCountText;
+    [SerializeField] private RectTransform dragRect;
 
     public static UI_Inventory inst;
 
@@ -30,14 +31,6 @@ public class UI_Inventory : MonoBehaviour
             part.Init(null, 0);
             parts.Add(part);
         }
-
-        // 드래그용 아이콘
-        GameObject iconObj = new GameObject("DragIcon");
-        iconObj.transform.SetParent(mainCanvas.transform, false);
-        dragRect = iconObj.AddComponent<RectTransform>();
-        dragIcon = iconObj.AddComponent<Image>();
-        dragIcon.raycastTarget = false;
-        dragIcon.enabled = false;
     }
 
     void Update()
@@ -138,23 +131,37 @@ public class UI_Inventory : MonoBehaviour
 
 
     // 선택 시 아이콘 마우스에 붙이고 슬롯에선 숨김
-    private void StartDragIcon(Inventory_Parts part)
+    void StartDragIcon(Inventory_Parts part)
     {
         if (part.icon == null || part.icon.sprite == null) return;
 
         dragIcon.sprite = part.icon.sprite;
         dragIcon.enabled = true;
 
-        part.icon.enabled = false; // 슬롯 이미지 숨기기
+        dragCountText.text = part.count > 1 ? part.count.ToString() : "";
+        dragCountText.enabled = true;
+
+        part.icon.enabled = false;
+        part.countText.text = "";       
     }
 
 
     // 선택 해제 시 복원
     private void StopDragIcon()
     {
-        if (selectedPart != null && selectedPart.icon != null)
-            selectedPart.icon.enabled = true; // 슬롯 이미지 복구
+        if (selectedPart != null)
+        {
+            if (selectedPart.icon != null)
+                selectedPart.icon.enabled = true;
+
+            if (selectedPart.countText != null)
+            {
+                selectedPart.countText.text =
+                    selectedPart.count > 1 ? selectedPart.count.ToString() : "";
+            }
+        }
 
         dragIcon.enabled = false;
+        dragCountText.enabled = false;
     }
 }

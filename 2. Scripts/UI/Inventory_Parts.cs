@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class Inventory_Parts : MonoBehaviour, IPointerClickHandler
 {
     public Image icon;
-    [SerializeField] private Text countText;
+    public Text countText;
     [SerializeField] private Sprite emptySprite; // 빈 슬롯용 스프라이트 (투명 혹은 회색)
 
     public ItemBase data { get; private set; }
