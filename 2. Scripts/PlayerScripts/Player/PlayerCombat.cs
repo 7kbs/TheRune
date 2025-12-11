@@ -12,9 +12,9 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("Skill Settings")]
     public Transform shootPos;
-    public bool isStealth;
     public Image[] skillCooldownImages;
     public KeyCode[] skillKeys = { KeyCode.Z, KeyCode.X, KeyCode.C };
+    public Image[] DragIconImages;
 
     // 쿨타임만 관리
     Dictionary<SkillData, float> lastUsedTimes = new();

@@ -3,25 +3,26 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
-public class SkillUIMgr : MonoBehaviour
+public class SkillUIMgr : UI_Base
 {
     public static SkillUIMgr inst;
+    [HideInInspector] public PlayerCombat pc;
 
     [Header("References")]
     public UserData userData;
 
     [Header("UI Elements")]
     public GameObject DragIconObj;
-    public Image[] DragIconImages;
     public Image[] SkillIconsUI;
-    public Text GoldText;
 
     void Awake()
     {
         inst = this;
+
+        pc = FindAnyObjectByType<PlayerCombat>();
     }
 
-    void Start()
+    public override void OnOpen()
     {
         AcquireSkills();
         InitUI();
@@ -29,26 +30,24 @@ public class SkillUIMgr : MonoBehaviour
 
     public void InitUI()
     {
-        for (int i = 0; i < DragIconImages.Length; i++)
+        for (int i = 0; i < pc.DragIconImages.Length; i++)
         {
             var skill = userData.SkillSlots[i];
             if (skill != null)
             {
-                DragIconImages[i].sprite = skill.skillIcon;
-                DragIconImages[i].enabled = true;
+                pc.DragIconImages[i].sprite = skill.skillIcon;
+                pc.DragIconImages[i].enabled = true;
             }
             else
             {
-                DragIconImages[i].sprite = null;
-                DragIconImages[i].enabled = false;
+                pc.DragIconImages[i].sprite = null;
+                pc.DragIconImages[i].enabled = false;
             }
         }
     }
 
     public void AcquireSkills()
     {
-        GoldText.text = userData.GameMoney.ToString();
-
         // SkillIconsUI 배열에 연결된 SkillParts 컴포넌트 기준으로 UI 활성화
         for (int i = 0; i < SkillIconsUI.Length; i++)
         {

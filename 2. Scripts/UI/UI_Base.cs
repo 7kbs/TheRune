@@ -1,15 +1,13 @@
 using UnityEngine;
 
-public class UI_Base : MonoBehaviour
+public abstract class UI_Base : MonoBehaviour
 {
+    public virtual void OnOpen() { }
+    public virtual void OnClose() { }
 
-    void OnEnable()
+    // UI 닫을 때 UIManager에 자동 보고
+    public void Close()
     {
-        PlayerMove.inst.ChangeState(new InteractingState());
-    }
-
-    void OnDisable()
-    {
-        PlayerMove.inst.ChangeState(new DefaultState());
+        UIManager.inst.CloseUI(this);
     }
 }

@@ -23,11 +23,7 @@ public class ItemManager : MonoBehaviour
 
     public void GetItem(ItemBase item)
     {
-        if (item == null)
-        {
-            Debug.LogWarning("Null ItemBase passed to GetItem");
-            return;
-        }
+        if (item == null) return;
 
         // 수량 증가 (ItemData에서 카운트 관리)
         itemData.AddItem(item, item.amount);

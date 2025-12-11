@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
 
     bool isInvincible = false;
     bool isGetRune = false;
-    [HideInInspector] public bool isStealth; //은신
+    public bool isStealth; //은신
 
     Interactable currentInteractable;
 

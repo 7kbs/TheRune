@@ -2,21 +2,21 @@ using UnityEngine;
 
 public class Stealth : MonoBehaviour, ISkill
 {
-    PlayerCombat player;
+    PlayerCombat pc;
     StealthSkillSO data;
     SpriteRenderer[] renderers;
     float startTime;
 
-    public void OnExecute(PlayerCombat player, SkillData skillData)
+    public void OnExecute(PlayerCombat pc, SkillData skillData)
     {
-        this.player = player;
+        this.pc = pc;
         this.data = (StealthSkillSO)skillData;
 
-        renderers = player.GetComponentsInChildren<SpriteRenderer>();
+        renderers = pc.GetComponentsInChildren<SpriteRenderer>();
         startTime = Time.time;
 
         // 은신 시작
-        player.isStealth = true;
+        pc.player.isStealth = true;
         foreach (var r in renderers)
         {
             var c = r.color;
@@ -27,7 +27,7 @@ public class Stealth : MonoBehaviour, ISkill
 
     void Update()
     {
-        if (player == null || data == null) return;
+        if (pc == null || data == null) return;
 
         if (Time.time - startTime >= data.stealthDuration)
         {
@@ -37,8 +37,8 @@ public class Stealth : MonoBehaviour, ISkill
 
     private void EndStealth()
     {
-        if (player != null)
-            player.isStealth = false;
+        if (pc != null)
+            pc.player.isStealth = false;
 
         if (renderers != null)
         {

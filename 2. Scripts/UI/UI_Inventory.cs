@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_Inventory : MonoBehaviour
+public class UI_Inventory : UI_Base
 {
     [SerializeField] private ItemDB itemData;     //±Ü¾î¿Ã item DataBase Storage
     [SerializeField] private Transform slotParent; // ½½·Ô 50°³ Á¸Àç
@@ -16,6 +16,8 @@ public class UI_Inventory : MonoBehaviour
     [SerializeField] private Image dragIcon;
     [SerializeField] private Text dragCountText;
     [SerializeField] private RectTransform dragRect;
+
+    [SerializeField] Text MoneyText;
 
     public static UI_Inventory inst;
 
@@ -47,10 +49,16 @@ public class UI_Inventory : MonoBehaviour
         }
     }
 
+    void Init()
+    {
+        Refresh();
+        MoneyText.text = GameMgr.inst.userData.GameMoney.ToString();
+    }
+
     void OnEnable()
     {
         itemData.OnInventoryChanged += Refresh;
-        Refresh();
+        Init();
     }
 
     void OnDisable()

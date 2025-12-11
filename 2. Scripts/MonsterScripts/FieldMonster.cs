@@ -26,7 +26,7 @@ public class FieldMonster : MonsterBase
     protected float stateTimer;
     protected IMonsterState currentState;
 
-    [SerializeField] protected DropTable dropTable;
+    [SerializeField] DropTable dropTable;
 
     void Awake()
     {
@@ -130,7 +130,14 @@ public class FieldMonster : MonsterBase
         // 공격 시 플레이어를 바라보게
         Vector3 dir = (player.transform.position - transform.position).normalized;
         Flip(dir);
+    }
 
-        // 공격 로직 구현 (예: 데미지, 애니메이션 이벤트 등)
+    public bool CanSeePlayer(Player player)
+    {
+        if (player == null) return false;
+        if (player.isStealth) return false;
+
+        float dist = Vector3.Distance(transform.position, player.transform.position);
+        return dist < traceRange;
     }
 }

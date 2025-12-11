@@ -1,18 +1,17 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class QuestUIMgr : MonoBehaviour
+public class QuestUIMgr : UI_Base
 {
     [Header("UI Elements")]
-    public Text mainQuestTitleText;
+    //public Text mainQuestTitleText;
     public Text questTitleText;
     public Text detailTitleText;
     public Text detailText;
     public Text rewardText;
-    public Text goldText;
 
-    public GameObject outClearImage;
-    public GameObject outProgressImage;
+    //public GameObject outClearImage;
+    //public GameObject outProgressImage;
     public GameObject clearImage;
     public GameObject progressImage;
     public GameObject questClearBtn;
@@ -29,7 +28,7 @@ public class QuestUIMgr : MonoBehaviour
         inst = this;
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
         RefreshUI();
     }
@@ -46,22 +45,21 @@ public class QuestUIMgr : MonoBehaviour
         bool showInProgress = q.progress == QuestProgress.InProgress;
 
         // 상태별 UI 표시
-        outClearImage.SetActive(showClear);
+        //outClearImage.SetActive(showClear);
         clearImage.SetActive(showClear);
 
-        outProgressImage.SetActive(showInProgress || showRewarded);
+        //outProgressImage.SetActive(showInProgress || showRewarded);
         progressImage.SetActive(showInProgress || showRewarded);
 
         questClearBtn.SetActive(showClear); // 보상 버튼은 Completed 상태에서만 보임
 
         // 텍스트 갱신
-        mainQuestTitleText.text = currentQuest.questTitle;
+        //mainQuestTitleText.text = currentQuest.questTitle;
         questTitleText.text = currentQuest.questTitle;
         detailTitleText.text = currentQuest.questTitle;
         detailText.text = currentQuest.description;
 
         rewardText.text = $"{currentQuest.reward}";
-        goldText.text = $"{userData.GameMoney}";
 
         // 클리어된 퀘스트들 UI 표시
         for (int i = 0; i < clearQuest.Length; i++)

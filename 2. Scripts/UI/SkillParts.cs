@@ -37,14 +37,14 @@ public class SkillParts : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (skillData == null || mgr?.DragIconImages == null) return;
+        if (skillData == null || mgr.pc.DragIconImages == null) return;
         mgr.DragIconObj.SetActive(false);
 
         Vector2 mousePos = Input.mousePosition;
 
-        for (int i = 0; i < mgr.DragIconImages.Length; i++)
+        for (int i = 0; i < mgr.pc.DragIconImages.Length; i++)
         {
-            var img = mgr.DragIconImages[i];
+            var img = mgr.pc.DragIconImages[i];
             if (img == null) continue;
 
             if (RectTransformUtility.RectangleContainsScreenPoint(img.rectTransform, mousePos))

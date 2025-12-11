@@ -25,14 +25,11 @@ public class PatrolState : IMonsterState
     public void Update(FieldMonster monster)
     {
         Player player = GameObject.FindObjectOfType<Player>();
-        if (player != null)
+
+        if (monster.CanSeePlayer(player))
         {
-            float dist = Vector3.Distance(monster.transform.position, player.transform.position);
-            if (dist < monster.traceRange)
-            {
-                monster.ChangeState(new TraceState());
-                return;
-            }
+            monster.ChangeState(new TraceState());
+            return;
         }
 
         if (isThinking)
@@ -87,21 +84,18 @@ public class TraceState : IMonsterState
     public void Update(FieldMonster monster)
     {
         Player player = GameObject.FindObjectOfType<Player>();
-        if (player == null)
+
+        if (!monster.CanSeePlayer(player))
         {
             monster.ChangeState(new PatrolState());
             return;
         }
 
         float dist = Vector3.Distance(monster.transform.position, player.transform.position);
+
         if (dist < monster.attackRange)
         {
             monster.ChangeState(new AttackState(player));
-            return;
-        }
-        else if (dist > monster.traceRange * 1.5f)
-        {
-            monster.ChangeState(new PatrolState());
             return;
         }
 
@@ -131,13 +125,15 @@ public class AttackState : IMonsterState
 
     public void Update(FieldMonster monster)
     {
-        if (target == null)
+        Player player = GameObject.FindObjectOfType<Player>();
+
+        if (!monster.CanSeePlayer(player))
         {
             monster.ChangeState(new PatrolState());
             return;
         }
 
-        float dist = Vector3.Distance(monster.transform.position, target.transform.position);
+        float dist = Vector3.Distance(monster.transform.position, player.transform.position);
 
         if (dist > monster.attackRange)
         {
@@ -147,11 +143,11 @@ public class AttackState : IMonsterState
 
         if (Time.time >= monster.lastAttackTime + monster.attackCooldown)
         {
-            Vector3 dir = (target.transform.position - monster.transform.position).normalized;
-            monster.Flip(dir); // 공격 시 바라보는 방향 고정
+            Vector3 dir = (player.transform.position - monster.transform.position).normalized;
+            monster.Flip(dir);
 
             monster.anim.SetTrigger("Attack");
-            monster.Attack(target);
+            monster.Attack(player);
 
             monster.lastAttackTime = Time.time;
         }

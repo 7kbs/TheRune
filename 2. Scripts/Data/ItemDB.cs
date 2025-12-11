@@ -23,12 +23,18 @@ public class ItemDB : ScriptableObject
     {
         ItemDictionary.Clear();
         invenItems.Clear();
+
+        // 모든 아이템 풀 로드 (획득 정보 X)
         allItems = Resources.LoadAll<ItemBase>(resourcesPath).ToList();
 
-        foreach (var item in allItems)
+        // invenItems는 플레이어 저장 데이터 기반으로 복원됨
+        // 여기선 건들지 않음
+
+        // 딕셔너리는 획득한 아이템만 등록
+        foreach (var inv in invenItems)
         {
-            ItemDictionary[item] = 0;
-            invenItems.Add(new InventoryItem { item = item, count = 0 });
+            if (inv.item != null)
+                ItemDictionary[inv.item] = inv.count;
         }
 
         OnInventoryChanged?.Invoke();
@@ -52,15 +58,14 @@ public class ItemDB : ScriptableObject
 
         if (!ItemDictionary.ContainsKey(item))
         {
+            // 처음 획득 → 여기서만 추가
             ItemDictionary[item] = amount;
             invenItems.Add(new InventoryItem { item = item, count = amount });
         }
         else
         {
             ItemDictionary[item] += amount;
-            var inv = invenItems.Find(i => i.item == item);
-            if (inv != null)
-                inv.count = ItemDictionary[item];
+            invenItems.Find(i => i.item == item).count = ItemDictionary[item];
         }
 
         OnInventoryChanged?.Invoke();

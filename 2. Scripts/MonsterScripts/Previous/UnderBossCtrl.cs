@@ -32,7 +32,7 @@ public class UnderBossCtrl : MonoBehaviour
     public Canvas BossCanvas;
 
     Animator anim;
-    GameObject player;
+    Player player;
 
     Vector3 Dir = Vector3.zero;
 
@@ -47,7 +47,7 @@ public class UnderBossCtrl : MonoBehaviour
     {
         GlobalValue.sceneType = SceneType.Battle;
 
-        player = GameObject.FindGameObjectWithTag("Player");
+        player = FindAnyObjectByType<Player>();
         anim = GetComponent<Animator>();
 
         //if문으로 Boss타입이 1이면 체력 ??? / Boss타입이 2면 체력 ??? 정해주고 시작
@@ -66,10 +66,11 @@ public class UnderBossCtrl : MonoBehaviour
 
     void Update()
     {
-        if (GameMgr.inst.MenuUIPanel.activeSelf == true || GameMgr.inst.isPlayerDie)
+        if (GameMgr.inst.isPlayerDie || !PlayerMove.inst.IsDefaultState)
         {
             return;
         }
+
         BossCanvas.gameObject.SetActive(true);
 
         Trace();

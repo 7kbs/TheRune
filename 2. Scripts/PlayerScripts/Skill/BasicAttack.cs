@@ -56,31 +56,4 @@ public class BasicAttack : MonoBehaviour, ISkill
         monster.TakeDamage(skillData.damage);
         hitSet.Add(monster);
     }
-
-    //void CheckHit()
-    //{
-    //    if (playerCombat == null) return;
-
-    //    bool facingLeft = playerCombat.transform.localScale.x < 0f;
-    //    Vector3 playerPos = playerCombat.transform.position;
-    //    Vector2 forward = facingLeft ? Vector2.right : Vector2.left;
-
-    //    MonsterBase[] monsters = FindObjectsOfType<MonsterBase>();
-    //    foreach (var monster in monsters)
-    //    {
-    //        if (monster == null || monster.isDead) continue;
-
-    //        float dist = Vector2.Distance(playerPos, monster.transform.position);
-    //        if (dist > skillData.attackRange) continue;
-
-    //        Vector2 dirToMonster = (monster.transform.position - playerPos).normalized;
-    //        float dot = Vector2.Dot(dirToMonster, forward);
-    //        if (dot <= 0.5f) continue;
-
-    //        if (hitSet.Contains(monster)) continue;
-
-    //        monster.TakeDamage(skillData.damage);
-    //        hitSet.Add(monster);
-    //    }
-    //}
 }

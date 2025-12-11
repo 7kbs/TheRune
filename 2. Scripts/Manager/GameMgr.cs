@@ -10,8 +10,6 @@ public class GameMgr : MonoBehaviour
     public ItemDB itemData;
 
     [HideInInspector] public Player player;   
-    public GameObject MenuUIPanel;  //메뉴UI판넬
-    public GameObject Skill_UI;     //스킬UI판넬    
     public GameObject LoadingPanel; //페이드인 판넬
 
     public Text GoldText;
@@ -114,23 +112,12 @@ public class GameMgr : MonoBehaviour
             });
         }
 
-        GoldText.text = $"{userData.GameMoney}";
-
         InitQuickSlots();
     }
 
 
     void Update()
     {
-        //ESC키를 누르면 메뉴 UI활성화
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (PlayerMove.inst.IsInteractionState) return;
-
-            PlayerMove.inst.ChangeState(new InteractingState());
-            MenuUIPanel.SetActive(true);
-        }
-
         if (Input.GetKeyDown(KeyCode.Tab)) HandleTabPress();
 
         //미니맵 온오프 변수가 true일때 플레이어 위치 추적
@@ -216,11 +203,6 @@ public class GameMgr : MonoBehaviour
         InfoText.text = "";
     }
 
-    public void UIOff()
-    {
-        if (MenuUIPanel.activeSelf)
-            MenuUIPanel.SetActive(false);
-    }
 
     public void DamageTextSpawn(float dmg, Vector3 pos, Color color)
     {
