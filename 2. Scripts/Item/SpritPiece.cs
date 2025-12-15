@@ -7,8 +7,6 @@ public class SpritPiece : MonoBehaviour, IItem
         var data = (SpiritPieceSO)item;
         userdata.GameMoney += data.defaultReward;
 
-        GameMgr.inst.GoldText.text = $"{userdata.GameMoney}";
-
         Debug.Log("SpiritPiece Excute");
     }
 }

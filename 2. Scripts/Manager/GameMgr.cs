@@ -12,36 +12,32 @@ public class GameMgr : MonoBehaviour
     [HideInInspector] public Player player;   
     public GameObject LoadingPanel; //페이드인 판넬
 
-    public Text GoldText;
     public GameObject SylvaronStoenObj;
 
-    public GameObject InfoPanel;    //도움말 판넬
-    public Text InfoText;           //도움말 텍스트
+    //[Header("--- MiniMap UI ---")]
+    //public GameObject MiniMapPanel; //미니맵 판넬
+    //public Transform Player;        //미니맵에 들어갈 플레이어 아이콘을 위한 플레이어 위치변수
+    //public RectTransform MiniMapPlayerIcon; //미니맵 플레이어 아이콘의 위치변수
+    //public Button minimapPortal;
+    //private bool MiniMapOnOff = false;      //미니맵이 켜졌는지 아닌지 판별할 변수
+    //public GameObject GameMapNPC_Char;
 
-    [Header("--- MiniMap UI ---")]
-    public GameObject MiniMapPanel; //미니맵 판넬
-    public Transform Player;        //미니맵에 들어갈 플레이어 아이콘을 위한 플레이어 위치변수
-    public RectTransform MiniMapPlayerIcon; //미니맵 플레이어 아이콘의 위치변수
-    public Button minimapPortal;
-    private bool MiniMapOnOff = false;      //미니맵이 켜졌는지 아닌지 판별할 변수
-    public GameObject GameMapNPC_Char;
+    //public Vector2 minimapOffset = Vector2.zero;  //플레이어아이콘의 위치추적변수
 
-    public Vector2 minimapOffset = Vector2.zero;  //플레이어아이콘의 위치추적변수
+    //[Header("--- LobbyMap UI ---")]
+    //public GameObject LobbyMapPanel;
+    //public Transform LobbyPlayer;
+    //public RectTransform LobbyMapPlayerIcon;
+    //private bool LobbyMapOnOff = false;
+    //public GameObject BossPortalIcon;
+    //public GameObject NPC_Char;
 
-    [Header("--- LobbyMap UI ---")]
-    public GameObject LobbyMapPanel;
-    public Transform LobbyPlayer;
-    public RectTransform LobbyMapPlayerIcon;
-    private bool LobbyMapOnOff = false;
-    public GameObject BossPortalIcon;
-    public GameObject NPC_Char;
-
-    public Vector2 LobbyMapOffset = Vector2.zero;
-    public Button lobbymapPortal;
+    //public Vector2 LobbyMapOffset = Vector2.zero;
+    //public Button lobbymapPortal;
 
     [Header("------ Damage Text ------")]
-    public Transform Damage_Canvas = null;
     public GameObject DamageTextRoot = null;
+    public Transform Damage_Canvas = null;
     //--- 캐릭터 메리위에 데미지 띄우기용 변수 선언
 
     //퀘스트 보상 수치 관리할 변수 추가 예정..
@@ -49,16 +45,6 @@ public class GameMgr : MonoBehaviour
 
     [Header("퀵슬롯")]
     public QuickSlot[] quickSlotUIs;  // 캔버스에 배치한 퀵슬롯 UI들
-
-    [Header("------ GameOverPanel ------")]
-    public GameObject GameOverPanel;
-    public GameObject MinusObj;
-    public Text MinusMoneyText;
-    public Text GameOverInfoText;
-    public Button ReviveBtn;
-    public GameObject GoLobbyPanel;
-
-    public bool isPlayerDie;
 
     public static GameMgr inst; 
 
@@ -72,7 +58,6 @@ public class GameMgr : MonoBehaviour
     {
         LoadingPanel.SetActive(true);
         Invoke(nameof(LoadingPanelOff), 3.0f);
-        isPlayerDie = false;
         PlayerMove.inst.ChangeState(new DefaultState());
 
         SoundMgr.inst.BGM_Play(true);
@@ -81,36 +66,36 @@ public class GameMgr : MonoBehaviour
         player = GameObject.Find("Player").GetComponent<Player>();
 
         //로비씬 지도 On
-        if (GlobalValue.sceneType == SceneType.Lobby)
-        {
-            if (LobbyMapPanel != null)
-            {
-                LobbyMapPanel.SetActive(false);
-                UpdateLobbyPlayerPos();
-            }
+        //if (GlobalValue.sceneType == SceneType.Lobby)
+        //{
+        //    if (LobbyMapPanel != null)
+        //    {
+        //        LobbyMapPanel.SetActive(false);
+        //        UpdateLobbyPlayerPos();
+        //    }
 
-            if (lobbymapPortal != null)
-                lobbymapPortal.onClick.AddListener(() =>
-                {
-                    LobbyPlayer.transform.position = new Vector2(-10.0f, 1.0f);
-                });
-        }
+        //    if (lobbymapPortal != null)
+        //        lobbymapPortal.onClick.AddListener(() =>
+        //        {
+        //            LobbyPlayer.transform.position = new Vector2(-10.0f, 1.0f);
+        //        });
+        //}
 
         //게임씬 지도 On
-        if (GlobalValue.sceneType == SceneType.Game)
-        {
-            if (MiniMapPanel != null)
-            {
-                MiniMapPanel.SetActive(false);
-                UpdatePlayerPos();
-            }
+        //if (GlobalValue.sceneType == SceneType.Game)
+        //{
+        //    if (MiniMapPanel != null)
+        //    {
+        //        MiniMapPanel.SetActive(false);
+        //        UpdatePlayerPos();
+        //    }
 
-            if (minimapPortal != null)
-                minimapPortal.onClick.AddListener(() =>
-            {
-                Player.transform.position = new Vector2(0.0f, 0.2f);
-            });
-        }
+        //    if (minimapPortal != null)
+        //        minimapPortal.onClick.AddListener(() =>
+        //    {
+        //        Player.transform.position = new Vector2(0.0f, 0.2f);
+        //    });
+        //}
 
         InitQuickSlots();
     }
@@ -121,8 +106,8 @@ public class GameMgr : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab)) HandleTabPress();
 
         //미니맵 온오프 변수가 true일때 플레이어 위치 추적
-        if (MiniMapOnOff) UpdatePlayerPos();
-        if (LobbyMapOnOff) UpdateLobbyPlayerPos();
+        //if (MiniMapOnOff) UpdatePlayerPos();
+        //if (LobbyMapOnOff) UpdateLobbyPlayerPos();
     }
 
 
@@ -131,77 +116,61 @@ public class GameMgr : MonoBehaviour
         switch (GlobalValue.sceneType)
         {
             case SceneType.Game:
-                ToggleGameMap();
+                UIManager.inst.OpenUI("MiniMapPanel");
                 break;
             case SceneType.Lobby:
-                ToggleLobbyMap();
+                UIManager.inst.OpenUI("LobbyMapPanel");
                 break;
         }
     }
 
-    void ToggleGameMap()
-    {
-        if (PlayerMove.inst.IsInteractionState) return;
+    //void ToggleGameMap()
+    //{
+    //    if (PlayerMove.inst.IsInteractionState) return;
 
-        // 상태 전환
-        if (PlayerMove.inst.IsDefaultState) PlayerMove.inst.ChangeState(new InteractingState());
-        else if (PlayerMove.inst.IsInteractionState) PlayerMove.inst.ChangeState(new DefaultState());
+    //    // 상태 전환
+    //    if (PlayerMove.inst.IsDefaultState) PlayerMove.inst.ChangeState(new InteractingState());
+    //    else if (PlayerMove.inst.IsInteractionState) PlayerMove.inst.ChangeState(new DefaultState());
 
-        MiniMapOnOff = !MiniMapOnOff;
-        MiniMapPanel.SetActive(MiniMapOnOff);
+    //    MiniMapOnOff = !MiniMapOnOff;
+    //    MiniMapPanel.SetActive(MiniMapOnOff);
 
-        BossPortalIcon.SetActive(!userData.BossDie);
-        GameMapNPC_Char.SetActive(!userData.PuzzleClear);
-    }
+    //    BossPortalIcon.SetActive(!userData.BossDie);
+    //    GameMapNPC_Char.SetActive(!userData.PuzzleClear);
+    //}
 
-    void ToggleLobbyMap()
-    {
-        if (PlayerMove.inst.IsInteractionState) return;
+    //void ToggleLobbyMap()
+    //{
+    //    if (PlayerMove.inst.IsInteractionState) return;
 
-        // 상태 전환
-        if (PlayerMove.inst.IsDefaultState) PlayerMove.inst.ChangeState(new InteractingState());
-        else if (PlayerMove.inst.IsInteractionState) PlayerMove.inst.ChangeState(new DefaultState());
+    //    // 상태 전환
+    //    if (PlayerMove.inst.IsDefaultState) PlayerMove.inst.ChangeState(new InteractingState());
+    //    else if (PlayerMove.inst.IsInteractionState) PlayerMove.inst.ChangeState(new DefaultState());
 
-        LobbyMapOnOff = !LobbyMapOnOff;
-        LobbyMapPanel.SetActive(LobbyMapOnOff);
+    //    LobbyMapOnOff = !LobbyMapOnOff;
+    //    LobbyMapPanel.SetActive(LobbyMapOnOff);
 
-        NPC_Char.SetActive(userData.PuzzleClear);
-    }
-
-
-    void UpdatePlayerPos() //플레이어 이동관련 함수
-    {
-        Vector3 playerPos = Player.transform.position;
-
-        Vector2 minimapPos = new Vector2(playerPos.x * 4.0f, playerPos.y * 3.2f) + minimapOffset;
-
-        MiniMapPlayerIcon.anchoredPosition = minimapPos;
-    }
-
-    void UpdateLobbyPlayerPos() //플레이어 이동관련 함수
-    {
-        Vector3 playerPos = LobbyPlayer.transform.position;
-
-        Vector2 minimapPos = new Vector2(playerPos.x * 11.0f, playerPos.y * 5.75f) + LobbyMapOffset;
-
-        LobbyMapPlayerIcon.anchoredPosition = minimapPos;
-    }
+    //    NPC_Char.SetActive(userData.PuzzleClear);
+    //}
 
 
+    //void UpdatePlayerPos() //플레이어 이동관련 함수
+    //{
+    //    Vector3 playerPos = Player.transform.position;
 
-    public void InfoPanelOn(string msg, float timer = 2.0f)
-    {        
-        InfoPanel.SetActive(true);
-        InfoText.text = msg;
-        SoundMgr.inst.UI_Play((int)SoundMgr.UI_Sound.Dialogue);
-        Invoke(nameof(InfoPanelOff), timer);
-    }
+    //    Vector2 minimapPos = new Vector2(playerPos.x * 4.0f, playerPos.y * 3.2f) + minimapOffset;
 
-    void InfoPanelOff()
-    {
-        InfoPanel.SetActive(false);
-        InfoText.text = "";
-    }
+    //    MiniMapPlayerIcon.anchoredPosition = minimapPos;
+    //}
+
+    //void UpdateLobbyPlayerPos() //플레이어 이동관련 함수
+    //{
+    //    Vector3 playerPos = LobbyPlayer.transform.position;
+
+    //    Vector2 minimapPos = new Vector2(playerPos.x * 11.0f, playerPos.y * 5.75f) + LobbyMapOffset;
+
+    //    LobbyMapPlayerIcon.anchoredPosition = minimapPos;
+    //}
 
 
     public void DamageTextSpawn(float dmg, Vector3 pos, Color color)
@@ -213,63 +182,6 @@ public class GameMgr : MonoBehaviour
         dmgClone.transform.position = StartPos;
     }
 
-    public void PlayerDie()
-    {
-        isPlayerDie = true;
-        PlayerMove.inst.ChangeState(new DeadState());
-
-        GameOverPanel.SetActive(true);
-
-        int payment = (int)(userData.GameMoney * 0.3);
-        MinusMoneyText.text = $"{payment}";
-
-        if (GlobalValue.sceneType == SceneType.Battle
-            || GlobalValue.sceneType == SceneType.Boss)
-        {
-            GameOverInfoText.text = "다시 도전하시겠습니까?";
-            MinusObj.SetActive(false);
-        }
-        else
-        {
-            GameOverInfoText.text = "소지금의 30%를 지불하고\n\n부활합니다.";
-            MinusObj.SetActive(true);
-        }
-    }
-
-    public void PlayerRevive()
-    {
-        player.anim.SetBool("die", false);
-        isPlayerDie = false;
-        PlayerMove.inst.ChangeState(new DefaultState());
-
-        if (GlobalValue.sceneType == SceneType.Battle)
-        {
-            SceneManager.LoadScene("BattleScene");
-            SceneManager.LoadScene("PlayerScene", LoadSceneMode.Additive);
-        }
-        else if (GlobalValue.sceneType == SceneType.Boss)
-            SceneManager.LoadScene("BossScene");
-        else
-        {
-            userData.GameMoney -= (int)(userData.GameMoney * 0.3f);
-            GoldText.text = $"{userData.GameMoney}";
-        }
-
-        GameOverPanel.SetActive(false);
-
-        InitPlayerSetting();
-    }
-
-    public void GameOverExitBtnClick()
-    {
-        SceneManager.LoadScene("LobbyScene");
-        SceneManager.LoadScene("PlayerScene", LoadSceneMode.Additive);
-
-        userData.playerSavePos.x = 0;
-        userData.playerSavePos.y = 0;
-
-        InitPlayerSetting();
-    }
 
     public void LoadingPanelOff()
     {
@@ -308,13 +220,4 @@ public class GameMgr : MonoBehaviour
         }
     }
     ///퀵슬롯 
-    
-    void InitPlayerSetting()
-    {
-        userData.PlayerHp = userData.PlayerMaxHp;
-        userData.PlayerMp = userData.PlayerMaxMp;
-
-        player.HpBar.fillAmount = userData.PlayerHp / userData.PlayerMaxHp;
-        player.MpBar.fillAmount = userData.PlayerMp / userData.PlayerMaxMp;
-    }
 }

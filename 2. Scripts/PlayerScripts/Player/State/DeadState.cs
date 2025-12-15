@@ -5,8 +5,7 @@ public class DeadState : IPlayerState
     public void OnEnterState(PlayerMove playerMove)
     {
         Debug.Log("사망 상태 진입");
-        // 플레이어의 물리 속도를 0으로 만듭니다.
-        playerMove.rb.linearVelocity = Vector2.zero;
+        playerMove.rb.bodyType = RigidbodyType2D.Static;
         playerMove.anim.SetBool("run", false);
         playerMove.anim.SetBool("jump", false);
         playerMove.anim.SetTrigger("die"); // "die" 트리거를 재생합니다.

@@ -66,7 +66,7 @@ public class UnderBossCtrl : MonoBehaviour
 
     void Update()
     {
-        if (GameMgr.inst.isPlayerDie || !PlayerMove.inst.IsDefaultState)
+        if (GameMgr.inst.player.isDie || !PlayerMove.inst.IsDefaultState)
         {
             return;
         }
@@ -225,7 +225,7 @@ public class UnderBossCtrl : MonoBehaviour
         BossCanvas.gameObject.SetActive(false);
         Warpgate.SetActive(true);
         isDie = true;
-        GameMgr.inst.InfoPanelOn("Æ÷Å»ÀÌ ¿­·È½À´Ï´Ù!", 3.0f);
+        UIManager.inst.GetToast().Init("Æ÷Å»ÀÌ ¿­·È½À´Ï´Ù!", Color.white);
         Destroy(gameObject, 3.0f);
     }
 

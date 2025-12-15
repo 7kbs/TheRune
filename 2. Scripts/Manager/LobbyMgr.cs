@@ -55,7 +55,7 @@ public class LobbyMgr : MonoBehaviour
     {
         if (!QuestMgr.inst.IsQuestInProgress("main08"))
         {
-            GameMgr.inst.InfoPanelOn("퀘스트를 완료해주세요!");
+            UIManager.inst.GetToast().Init("퀘스트를 완료해주세요!", Color.white);
             return;
         }
 
@@ -64,7 +64,6 @@ public class LobbyMgr : MonoBehaviour
         if (runeStone != null)
         {
             GameMgr.inst.itemData.UseItem(runeStone, 1);
-            Debug.Log("[RuneStoneAnimOn] RuneStone 아이템 제거 완료");
         }
 
         Sylvaron.SetActive(false);
@@ -86,7 +85,7 @@ public class LobbyMgr : MonoBehaviour
 
         var cq = QuestMgr.inst.CurrentQuest();
         QuestMgr.inst.TryCompleteQuest(cq);
-        GameMgr.inst.InfoPanelOn("퀘스트를 완료하고 보상을 얻으세요!");
+        UIManager.inst.GetToast().Init("퀘스트를 완료하고 보상을 얻으세요!", Color.white);
 
         Sylvaron_Stone.SetActive(true);
     }

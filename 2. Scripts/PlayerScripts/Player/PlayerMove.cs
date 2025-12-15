@@ -31,13 +31,12 @@ public class PlayerMove : MonoBehaviour
     public Rigidbody2D rb;
     public Animator anim;
 
-    // ���� ���� �����
     IPlayerState currentState;
     float coyoteCounter;
     float jumpBufferCounter;
     bool isFacingRight = true;
 
-    public System.Action OnLand; // ���� �̺�Ʈ
+    public System.Action OnLand;
 
     [HideInInspector] public bool isJump;
     [HideInInspector] public int jumpCount = 0;
@@ -64,7 +63,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
-        if (isDashing) return; // ��� �߿� �Է� ����
+        if (isDashing) return;
         currentState?.UpdateState(this);
 
         HandleJumpLogic();
@@ -74,10 +73,9 @@ public class PlayerMove : MonoBehaviour
     {
         bool grounded = IsGrounded();
 
-        // ���� ����
         if (!wasGrounded && grounded)
         {
-            OnLand?.Invoke(); // Player.cs���� ��� ��
+            OnLand?.Invoke();
             isJump = false;
             jumpCount = 0;
         }
@@ -97,7 +95,6 @@ public class PlayerMove : MonoBehaviour
         currentState.OnEnterState(this);
     }
 
-    // === ���� ���� ===
     void HandleJumpLogic()
     {
         bool grounded = IsGrounded();
@@ -112,14 +109,12 @@ public class PlayerMove : MonoBehaviour
         else
             jumpBufferCounter -= Time.deltaTime;
 
-        // ���� ���� ����
         if (jumpBufferCounter > 0 && (coyoteCounter > 0 || jumpCount < maxJumpCount))
         {
             Jump();
             jumpBufferCounter = 0;
         }
 
-        // ���� ���� Ű �� ��� ������
         if (Input.GetKeyUp(KeyCode.Space) && rb.linearVelocity.y > 0)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
@@ -133,28 +128,23 @@ public class PlayerMove : MonoBehaviour
         jumpCount++;
     }
 
-    // === �̵� ===
     void HandleMove()
     {
         rb.linearVelocity = new Vector2(movement.x * moveSpeed, rb.linearVelocity.y);
     }
 
-    // === ���� ���� ===
     void ApplyGravityCurve()
     {
         if (rb.linearVelocity.y < 0)
         {
-            // �ϰ� �� ������
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
         }
         else if (rb.linearVelocity.y > 0 && !Input.GetKey(KeyCode.Space))
         {
-            // ��� �� �����̽� ���� ���� ����
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
         }
     }
 
-    // === ��� ===
     public void StartDash()
     {
         if (Time.time < lastDashTime + dashCooldown || isDashing) return;
@@ -171,14 +161,13 @@ public class PlayerMove : MonoBehaviour
         float dashDir = transform.localScale.x > 0 ? -1 : 1;
         rb.linearVelocity = new Vector2(dashDir * dashForce, 0f);
 
-        // ��� �� �߷� ����
         rb.gravityScale = 0f;
         anim.SetTrigger("dash");
 
         while (Time.time < startTime + dashDuration)
             yield return null;
 
-        rb.gravityScale = 3f; // �⺻�� ���� (������Ʈ �⺻�� �°� ����)
+        rb.gravityScale = 3f;
         isDashing = false;
     }
 

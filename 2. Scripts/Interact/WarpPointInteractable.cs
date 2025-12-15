@@ -15,7 +15,7 @@ public class WarpPointInteractable : Interactable
         {
             if (!QuestMgr.inst.IsQuestRewarded(requiredData.questID))
             {
-                GameMgr.inst.InfoPanelOn("퀘스트를 완료해주세요!");   
+                UIManager.inst.GetToast().Init("퀘스트를 완료해주세요!", Color.white);
                 return;
             }
             else QuestMgr.inst.TryCompleteQuest(targetData);

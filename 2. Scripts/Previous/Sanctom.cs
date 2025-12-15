@@ -60,7 +60,7 @@ public class Sanctom : MonoBehaviour
 
             QuestMgr.inst.TryCompleteQuest(cq);
             QuestUIMgr.inst.RefreshUI();
-            GameMgr.inst.InfoPanelOn("퀘스트를 완료하고 보상을 얻으세요!");
+            UIManager.inst.GetToast().Init("퀘스트를 완료하고 보상을 얻으세요!", Color.white);
         }
     }
 

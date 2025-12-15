@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
 
     bool isInvincible = false;
     bool isGetRune = false;
+
+    public bool isDie;
     public bool isStealth; //은신
 
     Interactable currentInteractable;
@@ -30,6 +32,7 @@ public class Player : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         audioSource = GetComponents<AudioSource>();
     }
+
 
     void Start()
     {
@@ -97,7 +100,7 @@ public class Player : MonoBehaviour
             if (GameMgr.inst.userData.PlayerHp <= 0)
             {
                 GameMgr.inst.userData.PlayerHp = 0;
-                GameMgr.inst.PlayerDie();
+                Die();
                 anim.SetBool("die", true);
                 transform.localScale = new Vector3(1, 1, 1);
             }
@@ -106,6 +109,14 @@ public class Player : MonoBehaviour
             StartCoroutine(InvincibilityCoroutine());
         }
         DataMgr.inst.SaveData();
+    }
+
+    public void Die()
+    {
+        isDie = true;
+        PlayerMove.inst.ChangeState(new DeadState());
+
+        UIManager.inst.OpenUI("UI_FadeGameOver");
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -163,8 +174,8 @@ public class Player : MonoBehaviour
         currentInteractable = inter;
         Debug.Log("Enter: " + inter.name);
 
-        if (inter.interactType == InteractableType.WarpPoint) GameMgr.inst.InfoPanelOn("↑키를 눌러 이동하세요!");
-        else GameMgr.inst.InfoPanelOn("F키를 눌러 상호작용 하세요!");
+        if (inter.interactType == InteractableType.WarpPoint) UIManager.inst.GetToast().Init("↑키를 눌러 이동하세요!", Color.white);
+        else UIManager.inst.GetToast().Init("F키를 눌러 상호작용 하세요!", Color.white);
     }
 
     private void HandleExit(Interactable inter)

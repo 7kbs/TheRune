@@ -20,32 +20,20 @@ public class UIManager : MonoBehaviour
             HandleEscape();
 
         if (Input.GetKeyDown(KeyCode.I))
-            OpenSingleUI("UI_Inventory");
+            OpenUI("UI_Inventory");
 
         if (Input.GetKeyDown(KeyCode.K))
-            OpenSingleUI("UI_Skill_Re");
+            OpenUI("UI_Skill_Re");
 
         if (Input.GetKeyDown(KeyCode.J))
-            OpenSingleUI("UI_Quest");
+            OpenUI("UI_Quest");
     }
 
-    // --------------------------------------------------------------------
-    // UI 하나만 열기 (중복 방지 + 열기 전 기존 UI 싹 제거)
-    // --------------------------------------------------------------------
-    public UI_Base OpenSingleUI(string uiName)
-    {
-        // 기존 UI 모두 닫기
-        CloseAllUI();
 
-        // 새 UI 오픈
-        return OpenUI(uiName);
-    }
-
-    // --------------------------------------------------------------------
-    // UI 열기 (스택에 하나 추가)
-    // --------------------------------------------------------------------
     public UI_Base OpenUI(string uiName)
     {
+        CloseAllUI();
+
         var prefab = Resources.Load<UI_Base>("UI_Path/" + uiName);
         var ui = Instantiate(prefab, rootLayer);
 
@@ -54,9 +42,6 @@ public class UIManager : MonoBehaviour
         return ui;
     }
 
-    // --------------------------------------------------------------------
-    // UI 닫기 (스택 최상단만 닫도록 설계됨)
-    // --------------------------------------------------------------------
     public void CloseUI(UI_Base ui)
     {
         if (uiStack.Count == 0) return;
@@ -66,6 +51,8 @@ public class UIManager : MonoBehaviour
             uiStack.Pop();
             ui.OnClose();
             Destroy(ui.gameObject);
+
+            PlayerMove.inst.ChangeState(new DefaultState());
         }
         else
         {
@@ -73,9 +60,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // --------------------------------------------------------------------
-    // 모든 UI 제거
-    // --------------------------------------------------------------------
     public void CloseAllUI()
     {
         while (uiStack.Count > 0)
@@ -86,9 +70,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // --------------------------------------------------------------------
-    // ESC 핸들링
-    // --------------------------------------------------------------------
     void HandleEscape()
     {
         if (uiStack.Count > 0)
@@ -98,7 +79,13 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        // UI가 **완전히 없을 때만** Setting UI 열기
+        // UI가 완전히 없을 때만 Setting UI 열기
         OpenUI("UI_Setting");
+    }
+
+
+    public UI_Toast GetToast()
+    {
+        return Instantiate(Resources.Load<UI_Toast>("UI_Path/" + "UI_Toast"), transform);
     }
 }

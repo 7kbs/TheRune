@@ -59,7 +59,7 @@ public class SkillShopProduct : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 // 스킬 획득 반영
                 SkillUIMgr.inst.AcquireSkills();
 
-                GameMgr.inst.InfoPanelOn("ESC키를 눌러 새로운 스킬을 등록하세요!");
+                UIManager.inst.GetToast().Init("ESC키를 눌러 새로운 스킬을 등록하세요!", Color.white);
             }
         }
     }
@@ -73,12 +73,12 @@ public class SkillShopProduct : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
         if (GameMgr.inst.userData.GameMoney < skillData.price)
         {
-            GameMgr.inst.InfoPanelOn("실바론이 숲의 힘을 더 필요로 합니다.");
+            UIManager.inst.GetToast().Init("실바론이 숲의 힘을 더 필요로 합니다.", Color.white);
             return;
         }
 
         isFill = true;
-        GameMgr.inst.InfoPanelOn("길게 눌러 스킬을 구매하세요!");
+        UIManager.inst.GetToast().Init("길게 눌러 스킬을 구매하세요!", Color.white);
     }
 
     public void OnPointerUp(PointerEventData eventData)

@@ -91,7 +91,7 @@ public class BossMapPatternMgr : MonoBehaviour
     #region Pattern Execution
     private void TryExecuteRandomPattern()
     {
-        if (!BossMapMgr.Inst.CutSceneOver || GameMgr.inst.isPlayerDie || boss.isDie)
+        if (!BossMapMgr.Inst.CutSceneOver || GameMgr.inst.player.isDie || boss.isDie)
             return;
 
         // 쿨타임이 끝난 패턴만 후보에 넣기

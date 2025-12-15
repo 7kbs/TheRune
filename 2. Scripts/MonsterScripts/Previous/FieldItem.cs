@@ -68,7 +68,7 @@ public class FieldItem : MonoBehaviour
             // 인벤토리에 반영
             ItemManager.inst.GetItem(rewardItem);
 
-            GameMgr.inst.InfoPanelOn("아이템 습득! ESC키를 눌러 인벤토리를 확인해보세요!");
+            UIManager.inst.GetToast().Init("아이템 습득! ESC키를 눌러 인벤토리를 확인해보세요!", Color.white);
 
             Destroy(gameObject);
         }

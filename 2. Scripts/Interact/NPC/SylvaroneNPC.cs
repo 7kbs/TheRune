@@ -24,7 +24,7 @@ public class SylvaroneNPC : NPCInteractable
         if (!PlayerMove.inst.IsInteractionState)
         {
             PlayerMove.inst.ChangeState(new InteractingState());
-            DialogueMgr.inst.shopFrame.gameObject.SetActive(true);
+            UIManager.inst.OpenUI("UI_SkillShop");
         }
     }
 }

@@ -90,7 +90,7 @@ public class BossMapMgr : MonoBehaviour
 
     public void ClearObjSet()
     {
-        GameMgr.inst.InfoPanelOn("Æ÷Å»ÀÌ ¿­·È½À´Ï´Ù!", 3.0f);
+        UIManager.inst.GetToast().Init("Æ÷Å»ÀÌ ¿­·È½À´Ï´Ù!", Color.white);
         RuneStone.SetActive(true);
         WarpGate.transform.SetParent(WarpPoint.transform);
         WarpGate.transform.localPosition = Vector3.zero;
