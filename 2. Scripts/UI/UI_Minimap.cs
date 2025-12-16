@@ -42,8 +42,8 @@ public class UI_Minimap : UI_Base
 
     void UpdateIcons()
     {
-        bossIcon?.SetActive(!GameMgr.inst.userData.BossDie);
-        npcIcon?.SetActive(!GameMgr.inst.userData.PuzzleClear);
+        bossIcon.SetActive(GameMgr.inst.userData.BossPortalOpen);
+        npcIcon.SetActive(!GameMgr.inst.userData.TerragonPuzzleClear);
     }
 
     void UpdatePlayerPos()
@@ -70,7 +70,7 @@ public class UI_Minimap : UI_Base
         //}
 
         bool isGameScene = GlobalValue.sceneType == SceneType.Game;
-        bool isClear = GameMgr.inst.RunePuzzleClear;
+        bool isClear = GameMgr.inst.userData.TerragonPuzzleClear;
 
         npcIcon.SetActive(isGameScene ? !isClear : isClear);
     }

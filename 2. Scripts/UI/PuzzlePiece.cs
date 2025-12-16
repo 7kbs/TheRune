@@ -7,15 +7,17 @@ using UnityEngine.UI;
 public class PuzzlePiece : MonoBehaviour, IDragHandler, IEndDragHandler
 {
     public int snapOffset = 30;
-    public Puzzle puzzle;
+    public UI_Puzzle puzzle;
     public int piece_no;
     Image image;
 
     // 원래 위치 저장 변수
     private Vector3 originalPosition;
 
-    void Start()
+    void Awake()
     {
+        puzzle = GetComponentInParent<UI_Puzzle>();
+
         // 조각의 원래 위치를 저장
         originalPosition = transform.position;
         image = GetComponent<Image>();
@@ -68,7 +70,10 @@ public class PuzzlePiece : MonoBehaviour, IDragHandler, IEndDragHandler
         // 퍼즐이 클리어 되었는지 체크
         if (puzzle.IsClear())
         {
-            GameMgr.inst.RunePuzzleClear = true;
+            GameMgr.inst.userData.PuzzleClear = true;
+            Sanctom stoneCtrl = GameObject.Find("StoneObject").GetComponent<Sanctom>();
+            stoneCtrl.BossPortalOpen();
+
             Debug.Log("Clear");
         }
     }

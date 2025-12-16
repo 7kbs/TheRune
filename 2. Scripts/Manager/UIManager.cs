@@ -16,6 +16,8 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Tab)) HandleTabPress();
+
         if (Input.GetKeyDown(KeyCode.Escape))
             HandleEscape();
 
@@ -29,6 +31,18 @@ public class UIManager : MonoBehaviour
             OpenUI("UI_Quest");
     }
 
+    void HandleTabPress()
+    {
+        switch (GlobalValue.sceneType)
+        {
+            case SceneType.Game:
+                OpenUI("UI_GameMap");
+                break;
+            case SceneType.Lobby:
+                OpenUI("UI_LobbyMap");
+                break;
+        }
+    }
 
     public UI_Base OpenUI(string uiName)
     {

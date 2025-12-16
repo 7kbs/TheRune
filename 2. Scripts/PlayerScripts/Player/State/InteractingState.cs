@@ -7,7 +7,7 @@ public class InteractingState : IPlayerState
         Debug.Log("상호작용 상태 진입");
         // 플레이어 움직임 및 애니메이션을 멈춥니다.
         playerMove.anim.SetBool("run", false);
-        playerMove.rb.linearVelocity = Vector2.zero;
+        playerMove.rb.bodyType = RigidbodyType2D.Static;
     }
 
     // 이 상태에서는 아무것도 하지 않습니다.

@@ -9,7 +9,7 @@ public class LobbyMgr : MonoBehaviour
     public GameObject RuneStone;
     public GameObject Item_Flower;
 
-    public GameObject NPC_Char;
+    public GameObject Terragon;
     public GameObject Sylvaron;
     public GameObject Sylvaron_Stone;
 
@@ -20,10 +20,8 @@ public class LobbyMgr : MonoBehaviour
     Animation anim;
     public static LobbyMgr inst;
 
-    int DialogueIndex = 0;
 
-
-    private void Awake()
+    void Awake()
     {
         inst = this;
     }
@@ -35,8 +33,7 @@ public class LobbyMgr : MonoBehaviour
 
         anim = animGroup.GetComponent<Animation>();
 
-        if (GameMgr.inst.userData.PuzzleClear) NPC_Char.SetActive(true);
-        else NPC_Char.SetActive(false);
+        Terragon.SetActive(GameMgr.inst.userData.TerragonPuzzleClear);
 
         if (QuestMgr.inst.IsQuestCompleted("main08"))
         {
@@ -45,7 +42,7 @@ public class LobbyMgr : MonoBehaviour
             Sylvaron.SetActive(false);
         }
 
-        if (QuestMgr.inst.IsQuestCompleted("main09")) Sylvaron_Stone.SetActive(false);
+        Sylvaron_Stone.SetActive(QuestMgr.inst.IsQuestCompleted("main09"));
 
         DataMgr.inst.SaveData();
     }

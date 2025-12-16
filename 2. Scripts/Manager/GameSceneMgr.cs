@@ -22,7 +22,7 @@ public class GameSceneMgr : MonoBehaviour
     PuzzleBoxCtrl[] boxCtrl_1;
     PuzzleBoxCtrl[] boxCtrl_2;
 
-    public GameObject NPC_Char;
+    public GameObject Terragon;
 
     int DialogueIndex;
     int puzzleCount = 0;
@@ -38,8 +38,7 @@ public class GameSceneMgr : MonoBehaviour
         DialogueIndex = 0;
         GlobalValue.sceneType = SceneType.Game;
 
-        if (GameMgr.inst.userData.PuzzleClear) NPC_Char.SetActive(false);
-        else NPC_Char.SetActive(true);
+        Terragon.SetActive(!GameMgr.inst.userData.TerragonPuzzleClear);
 
         boxCtrl_1 = Puzzle_1_BoxObject.GetComponentsInChildren<PuzzleBoxCtrl>(true);
         boxCtrl_2 = Puzzle_2_BoxObject.GetComponentsInChildren<PuzzleBoxCtrl>(true);
@@ -109,7 +108,7 @@ public class GameSceneMgr : MonoBehaviour
                         PuzzlePanel.SetActive(false);
                         DialogueMgr.inst.dialogueBox.SetActive(true);
                         
-                        GameMgr.inst.userData.PuzzleClear = true;
+                        GameMgr.inst.userData.TerragonPuzzleClear = true;
                         SoundMgr.inst.SFX_Play((int)SoundMgr.SFX_Sound.usePotion);
                     }
                 }

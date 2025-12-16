@@ -11,7 +11,7 @@ public class TerragonNPC : NPCInteractable
     {
         Debug.Log("Terragon");
 
-        if (!GameMgr.inst.userData.PuzzleClear)
+        if (!GameMgr.inst.userData.TerragonPuzzleClear)
             DialogueMgr.inst.OnPuzzleTriggered += OpenPuzzlePanel;
 
         if (QuestMgr.inst.IsQuestInProgress(main11.questID))

@@ -75,8 +75,9 @@ public class UserData : ScriptableObject
     public bool UnderBossDie;         //준보스가 죽었는지 안죽었는지 체크할 변수
     public bool BossDie = false;        //보스가 죽었는지 안죽었는지 확인하는 변수
 
-    public bool PuzzleClear = false; //테라곤 퍼즐클리어 했는지 안했는지
-    public bool VineDestroy = false;  //지하입구 장애물 부쉈는지 안부쉈는지
+    public bool PuzzleClear = false; //생텀퍼즐 클리어
+    public bool TerragonPuzzleClear = false;
+    public bool VineDestroy = false;  //지하입구 장애물 파괴유무
 
 
     //데이터 초기화 함수 >> 타이틀에 버튼하나 만들어서 넣던지..
@@ -130,6 +131,7 @@ public class UserData : ScriptableObject
         UnderBossDie = false;
         BossDie = false;
         PuzzleClear = false;
+        TerragonPuzzleClear = false;
         VineDestroy = false;
     }
 
