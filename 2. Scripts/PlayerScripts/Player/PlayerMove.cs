@@ -130,6 +130,7 @@ public class PlayerMove : MonoBehaviour
 
     void HandleMove()
     {
+        if (rb.bodyType == RigidbodyType2D.Dynamic)
         rb.linearVelocity = new Vector2(movement.x * moveSpeed, rb.linearVelocity.y);
     }
 

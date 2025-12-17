@@ -9,7 +9,8 @@ public class GameMgr : MonoBehaviour
     public UserData userData;       //유저가 저장한 정보를 얻어오는 데이터
     public ItemDB itemData;
 
-    [HideInInspector] public Player player;   
+    [HideInInspector] public Player player;
+    public Canvas canvas;
     public GameObject FadePanel; //페이드인 판넬
 
     public GameObject SylvaronStoenObj;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class UIManager : MonoBehaviour
 {
     public static UIManager inst;
+    PlayerCombat pc;
 
     [SerializeField] Transform rootLayer;
 
@@ -12,6 +13,9 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         inst = this;
+
+        pc = FindAnyObjectByType<PlayerCombat>();
+        InitUI();
     }
 
     void Update()
@@ -101,5 +105,23 @@ public class UIManager : MonoBehaviour
     public UI_Toast GetToast()
     {
         return Instantiate(Resources.Load<UI_Toast>("UI_Path/" + "UI_Toast"), transform);
+    }
+
+    public void InitUI()
+    {
+        for (int i = 0; i < pc.DragIconImages.Length; i++)
+        {
+            var skill = GameMgr.inst.userData.SkillSlots[i];
+            if (skill != null)
+            {
+                pc.DragIconImages[i].sprite = skill.skillIcon;
+                pc.DragIconImages[i].enabled = true;
+            }
+            else
+            {
+                pc.DragIconImages[i].sprite = null;
+                pc.DragIconImages[i].enabled = false;
+            }
+        }
     }
 }

@@ -40,8 +40,6 @@ public class QuestMgr : MonoBehaviour
                 break;
             }
         }
-
-        QuestUIMgr.inst.RefreshUI();
     }
 
     /// 퀘스트 리스트가 없으면 Resources에서 SO를 읽어 채운다 (지연 초기화)
@@ -134,7 +132,6 @@ public class QuestMgr : MonoBehaviour
             q.progress = QuestProgress.Completed;
             DataMgr.inst.SaveData();
         }
-        QuestUIMgr.inst.RefreshUI();
     }
 
     // 보상 수령
@@ -167,7 +164,6 @@ public class QuestMgr : MonoBehaviour
             q.progress = QuestProgress.Completed;
             Debug.Log($"Quest {data.questID} completed!");
             DataMgr.inst.SaveData();
-            QuestUIMgr.inst.RefreshUI();
         }
     }
 

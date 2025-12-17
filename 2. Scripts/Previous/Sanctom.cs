@@ -6,7 +6,6 @@ public class Sanctom : MonoBehaviour
 {
     public GameObject[] EffObj;
     public GameObject BossPortalEff;
-    public GameObject BossPortalObj;
     public Camera SubCam;
 
     public QuestData requireQuest;
@@ -15,13 +14,10 @@ public class Sanctom : MonoBehaviour
     {
         if (GameMgr.inst.userData.BossPortalOpen && GameMgr.inst.userData.BossDie == false)
         {
-            BossPortalObj.gameObject.SetActive(true);
             EffObj[0].SetActive(true);
             EffObj[1].SetActive(true);
             EffObj[2].SetActive(true);
         }
-
-        if (GameMgr.inst.userData.BossDie) BossPortalObj.gameObject.SetActive(false);
     }
 
     public void StoneInteration()
@@ -35,9 +31,9 @@ public class Sanctom : MonoBehaviour
     public void BossPortalOpen()
     {
         PlayerMove.inst.ChangeState(new InteractingState());
+        GameSceneMgr.inst.SpawnBossPortal();
         GameMgr.inst.userData.BossPortalOpen = true;
         BossPortalEff.SetActive(true);
-        BossPortalObj.SetActive(true);
         Invoke(nameof(SubCamOn), 8.0f);
     }
 
@@ -59,7 +55,6 @@ public class Sanctom : MonoBehaviour
         {
 
             QuestMgr.inst.TryCompleteQuest(cq);
-            QuestUIMgr.inst.RefreshUI();
             UIManager.inst.GetToast().Init("퀘스트를 완료하고 보상을 얻으세요!", Color.white);
         }
     }

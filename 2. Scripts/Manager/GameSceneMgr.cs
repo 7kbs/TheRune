@@ -23,6 +23,8 @@ public class GameSceneMgr : MonoBehaviour
     PuzzleBoxCtrl[] boxCtrl_2;
 
     public GameObject Terragon;
+    public GameObject bossportal;
+    public Transform bossportalpos;
 
     int DialogueIndex;
     int puzzleCount = 0;
@@ -63,6 +65,8 @@ public class GameSceneMgr : MonoBehaviour
             if (GameMgr.inst.userData.uniqueItem.Contains(RunePiece[i].GetComponent<FieldItem>().uniqueId))
                 Destroy(RunePiece[i].gameObject);
         }
+
+        if (GameMgr.inst.userData.BossPortalOpen) SpawnBossPortal();
     }
 
 
@@ -118,5 +122,10 @@ public class GameSceneMgr : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SpawnBossPortal()
+    {
+        var bp = Instantiate(bossportal, bossportalpos);
     }
 }

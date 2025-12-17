@@ -25,25 +25,6 @@ public class SkillUIMgr : UI_Base
     public override void OnOpen()
     {
         AcquireSkills();
-        InitUI();
-    }
-
-    public void InitUI()
-    {
-        for (int i = 0; i < pc.DragIconImages.Length; i++)
-        {
-            var skill = userData.SkillSlots[i];
-            if (skill != null)
-            {
-                pc.DragIconImages[i].sprite = skill.skillIcon;
-                pc.DragIconImages[i].enabled = true;
-            }
-            else
-            {
-                pc.DragIconImages[i].sprite = null;
-                pc.DragIconImages[i].enabled = false;
-            }
-        }
     }
 
     public void AcquireSkills()

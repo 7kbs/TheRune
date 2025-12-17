@@ -59,7 +59,7 @@ public class SkillParts : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     mgr.userData.SkillSlots[i] = skillData;
                     img.sprite = skillData.skillIcon;
                     img.enabled = true;
-                    mgr.InitUI();
+                    UIManager.inst.InitUI();
                 }
                 break;
             }

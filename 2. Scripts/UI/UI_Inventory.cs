@@ -25,6 +25,8 @@ public class UI_Inventory : UI_Base
     {
         inst = this;
 
+        mainCanvas = GameMgr.inst.canvas;
+
         for (int i = 0; i < slotParent.childCount; i++)
         {
             var slot = slotParent.GetChild(i);
@@ -37,6 +39,8 @@ public class UI_Inventory : UI_Base
 
     void Update()
     {
+        if (mainCanvas == null) Debug.Log("1"); 
+
         if (dragIcon.enabled)
         {
             Vector2 pos;
