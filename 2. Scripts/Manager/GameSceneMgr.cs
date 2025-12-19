@@ -66,7 +66,7 @@ public class GameSceneMgr : MonoBehaviour
                 Destroy(RunePiece[i].gameObject);
         }
 
-        if (GameMgr.inst.userData.BossPortalOpen) SpawnBossPortal();
+        if (GameMgr.inst.userData.BossPortalOpen) BossPortalSetting();
     }
 
 
@@ -124,8 +124,8 @@ public class GameSceneMgr : MonoBehaviour
         }
     }
 
-    public void SpawnBossPortal()
+    public void BossPortalSetting()
     {
-        var bp = Instantiate(bossportal, bossportalpos);
+        bossportal.transform.localPosition = Vector3.zero;
     }
 }

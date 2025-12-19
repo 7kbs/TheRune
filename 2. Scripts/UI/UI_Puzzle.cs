@@ -25,6 +25,8 @@ public class UI_Puzzle : UI_Base
                 return false;
             }
         }
+
+        Invoke("Close", 1.0f);
         return true;
     }
 
@@ -45,10 +47,6 @@ public class UI_Puzzle : UI_Base
             if (childExists && !hasChild[i])
             {
                 hasChild[i] = true; // 자식 존재 여부 업데이트
-
-                Sanctom stoneCtrl = GameObject.Find("StoneObject").GetComponent<Sanctom>();
-
-                stoneCtrl.EffObj[i].SetActive(true);
             }
         }
     }

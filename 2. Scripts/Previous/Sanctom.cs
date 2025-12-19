@@ -14,9 +14,10 @@ public class Sanctom : MonoBehaviour
     {
         if (GameMgr.inst.userData.BossPortalOpen && GameMgr.inst.userData.BossDie == false)
         {
-            EffObj[0].SetActive(true);
-            EffObj[1].SetActive(true);
-            EffObj[2].SetActive(true);
+            for (int i = 0; i < EffObj.Length; i++)
+            {
+                EffObj[i].SetActive(true);
+            }
         }
     }
 
@@ -31,7 +32,7 @@ public class Sanctom : MonoBehaviour
     public void BossPortalOpen()
     {
         PlayerMove.inst.ChangeState(new InteractingState());
-        GameSceneMgr.inst.SpawnBossPortal();
+        GameSceneMgr.inst.BossPortalSetting();
         GameMgr.inst.userData.BossPortalOpen = true;
         BossPortalEff.SetActive(true);
         Invoke(nameof(SubCamOn), 8.0f);
@@ -53,7 +54,6 @@ public class Sanctom : MonoBehaviour
         
         if (cq == requireQuest)
         {
-
             QuestMgr.inst.TryCompleteQuest(cq);
             UIManager.inst.GetToast().Init("퀘스트를 완료하고 보상을 얻으세요!", Color.white);
         }

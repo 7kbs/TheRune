@@ -27,15 +27,9 @@ public class StoneObjNPC : NPCInteractable
             DialogueMgr.inst.StartDialogue(Sanctom);
         }
     }
-
-    void Awake()
-    {
-        ud = GameMgr.inst.userData;
-    }
-
     void Start()
     {
-
+        ud = GameMgr.inst.userData;
     }
 
     void FistContatct()

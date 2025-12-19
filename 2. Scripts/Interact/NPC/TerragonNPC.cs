@@ -16,7 +16,7 @@ public class TerragonNPC : NPCInteractable
 
         if (QuestMgr.inst.IsQuestInProgress(main11.questID))
         {
-            DialogueMgr.inst.shopFrame.gameObject.SetActive(true);
+            UIManager.inst.OpenUI("UI_SkillShop");
             return;
         }
 
@@ -46,7 +46,7 @@ public class TerragonNPC : NPCInteractable
         DialogueMgr.inst.OnDialogueEnded -= () => OnQuestDialogueEnded(data);
 
         // 퀘스트 완료 처리
-        QuestMgr.inst.TryCompleteQuest(data);
+        if (GlobalValue.sceneType != SceneType.Game) QuestMgr.inst.TryCompleteQuest(data);
 
         // main10이라면 엔딩 연출 호출
         if (data == main10)
