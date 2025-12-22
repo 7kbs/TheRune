@@ -31,6 +31,8 @@ public class ItemManager : MonoBehaviour
         // 아이템 효과 실행
         if (!item.Consumable)
         {
+            if (item is RuneStoneSO) return;
+
             var iitem = item.reward.GetComponent<IItem>();
             iitem.OnExcute(userData, item, itemData);
         }

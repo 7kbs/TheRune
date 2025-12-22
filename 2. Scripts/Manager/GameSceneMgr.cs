@@ -46,25 +46,15 @@ public class GameSceneMgr : MonoBehaviour
         boxCtrl_2 = Puzzle_2_BoxObject.GetComponentsInChildren<PuzzleBoxCtrl>(true);
 
         //준보스가 죽었는지 안죽었는지 체크해서 Trap설치한 부분 액티브 꺼놓기
-        if (GameMgr.inst.userData.UnderBossDie) Traps[0].SetActive(false);
+        if (GameMgr.inst.userData.UnderBossDie) for (int i = 0; i < Traps.Length; i++) Traps[i].SetActive(false);
 
         if (NextBtn != null)
-            NextBtn.onClick.AddListener(() =>
-            {
-                DialogueMgr.inst.OnNextClicked();
-            });
-
+            NextBtn.onClick.AddListener(() => { DialogueMgr.inst.OnNextClicked(); });
 
         if (ClearBtn != null)  ClearBtn.onClick.AddListener(CheckPuzzle);
 
-        if (GameMgr.inst.userData.VineDestroy)  VineObj.SetActive(false);
+        if (GameMgr.inst.userData.VineDestroy) VineObj.SetActive(false);
         else  VineObj.SetActive(true);
-
-        for (int i = 0; i < RunePiece.Length; i++)
-        {
-            if (GameMgr.inst.userData.uniqueItem.Contains(RunePiece[i].GetComponent<FieldItem>().uniqueId))
-                Destroy(RunePiece[i].gameObject);
-        }
 
         if (GameMgr.inst.userData.BossPortalOpen) BossPortalSetting();
     }

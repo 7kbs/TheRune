@@ -68,8 +68,7 @@ public class UserData : ScriptableObject
     public bool OpeningEnd = false;     //오프닝씬 한번만 나오도록 하는 변수
     public bool TutorialClear = false;  //튜토리얼 한번만 나오도록 하는 변수   
 
-    public bool[] GetStonePiece;        //룬스톤을 3개꽂았는지 아닌지 확인하는 변수
-    public HashSet<string> uniqueItem = new HashSet<string>();
+    public List<string> uniqueItem = new List<string>();
 
     public bool BossPortalOpen = false; //보스포탈이 열렸는지 안열렸는지 확인하는 변수
     public bool UnderBossDie;         //준보스가 죽었는지 안죽었는지 체크할 변수
@@ -125,7 +124,6 @@ public class UserData : ScriptableObject
         TutorialClear = false;
 
         uniqueItem.Clear();
-        for (int i = 0; i < GetStonePiece.Length; i++) GetStonePiece[i] = false;
         
         BossPortalOpen = false;
         UnderBossDie = false;

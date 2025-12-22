@@ -16,12 +16,15 @@ public class FieldItem : MonoBehaviour
 
     Player player;
 
+
     void Start()
     {
         player = FindAnyObjectByType<Player>();
 
         // 오브젝트를 목표 높이까지 위로 이동
         if (!rewardItem.QuestItem) StartCoroutine(MoveUpAndEnableMagnet());
+
+        if (GameMgr.inst.userData.uniqueItem.Contains(uniqueId)) Destroy(gameObject);
     }
 
     void Update()
@@ -63,7 +66,7 @@ public class FieldItem : MonoBehaviour
         if (collision.CompareTag("Player") && rewardItem != null)
         {
             //퀘스트 아이템일 경우 유니크ID를 통해 의도되지 않은 현상 예외처리
-            if (rewardItem.QuestItem) GameMgr.inst.userData.uniqueItem.Add(uniqueId);
+            if (rewardItem.QuestItem && !GameMgr.inst.userData.uniqueItem.Contains(uniqueId)) GameMgr.inst.userData.uniqueItem.Add(uniqueId);
 
             // 인벤토리에 반영
             ItemManager.inst.GetItem(rewardItem);

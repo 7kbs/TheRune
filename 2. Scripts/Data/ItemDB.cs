@@ -18,7 +18,7 @@ public class ItemDB : ScriptableObject
 
     public event Action OnInventoryChanged;
 
-    // 초기화: 모든 아이템 풀을 기반으로 inventoryItems 초기화
+    // 모든 아이템 풀을 기반으로 inventoryItems 초기화
     public void InitData()
     {
         ItemDictionary.Clear();

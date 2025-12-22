@@ -5,17 +5,13 @@ using UnityEngine;
 
 public class QuestMgr : MonoBehaviour
 {
-    private UserData userData;
+    public UserData userData;
     [SerializeField] string resourcesPath = "Quest SO"; // Resources 경로
     public static QuestMgr inst;
 
     void Awake()
     {
         inst = this;
-
-        // userData 참조 보정
-        if (userData == null)
-            userData = DataMgr.inst != null ? DataMgr.inst.userData : GameMgr.inst?.userData;
     }
 
     // 현재 퀘스트 갱신
@@ -42,7 +38,7 @@ public class QuestMgr : MonoBehaviour
         }
     }
 
-    /// 퀘스트 리스트가 없으면 Resources에서 SO를 읽어 채운다 (지연 초기화)
+    /// 퀘스트 리스트가 없으면 Resources에서 SO를 읽어 채운다
     public void EnsureQuestList()
     {
         if (userData == null) return;
@@ -52,7 +48,7 @@ public class QuestMgr : MonoBehaviour
 
         if (userData.questProgressList.Count > 0) return;
 
-        // Resources/5.Data/Quest 폴더 하위의 모든 QuestData 로드
+        // Resources/5.Data/Quest 내부의 모든 QuestData로드
         QuestData[] questSOList = Resources.LoadAll<QuestData>(resourcesPath);
         foreach (var so in questSOList)
         {
@@ -70,7 +66,7 @@ public class QuestMgr : MonoBehaviour
         DataMgr.inst?.SaveData();
     }
 
-    /// 현재 퀘스트 가져오기 (필요 시 첫 퀘스트를 InProgress로 승격)
+    /// 현재 퀘스트 가져오기 (필요 시 첫 퀘스트를 InProgress로 변경)
     public QuestData CurrentQuest()
     {
         // userData 보정
@@ -108,7 +104,7 @@ public class QuestMgr : MonoBehaviour
         if (nextQuest == null)
             return null;
 
-        // NoneStart → InProgress 승격
+        // NoneStart > InProgress 승격
         if (nextQuest.progress == QuestProgress.NoneStart)
             nextQuest.progress = QuestProgress.InProgress;
 
