@@ -33,8 +33,8 @@ public class SoundMgr : MonoBehaviour
     public AudioClip[] SFX_Clip;
     public AudioClip[] UI_Clip;
 
-    public static float BGM_Value = 1.0f;
-    public static float SFX_Value = 1.0f;
+    public static float BGM_Value = 0.5f;
+    public static float SFX_Value = 0.5f;
 
     public static SoundMgr inst;
 

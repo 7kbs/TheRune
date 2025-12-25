@@ -7,6 +7,7 @@ public class Inventory_Parts : MonoBehaviour, IPointerClickHandler
     public Image icon;
     public Text countText;
     [SerializeField] private Sprite emptySprite; // 빈 슬롯용 스프라이트 (투명 혹은 회색)
+    public ItemBase itemData;
 
     public ItemBase data { get; private set; }
     public int count { get; private set; }
@@ -18,6 +19,7 @@ public class Inventory_Parts : MonoBehaviour, IPointerClickHandler
     public void Init(ItemBase item, int amount)
     {
         data = item;
+        itemData = item;
         count = amount;
 
         if (item == null)
@@ -31,15 +33,25 @@ public class Inventory_Parts : MonoBehaviour, IPointerClickHandler
             icon.sprite = item.icon;
             countText.text = amount > 1 ? amount.ToString() : "";
             icon.color = Color.white;
+
+            if (item is PotionHPSO) ChangeColor(icon, new Color32(255, 20, 1, 255));
+            else if (item is PotionMPSO) ChangeColor(icon, new Color32(67, 255, 235, 255));
         }
     }
 
     // UI에서 보여줄 아이콘 스프라이트(외부에서 필요)
     public Sprite GetIcon() => icon.sprite;
 
-    // 슬롯 클릭: UI_Inventory에 위임
+    // 슬롯 클릭 UI_Inventory에 위임
     public void OnPointerClick(PointerEventData eventData)
     {
         UI_Inventory.inst.OnSlotClicked(this);
+    }
+
+    
+    // Sprite 색칠용
+    void ChangeColor(Image img, Color color)
+    {
+        img.color = color;
     }
 }

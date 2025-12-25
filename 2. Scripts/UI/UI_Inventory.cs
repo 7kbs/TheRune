@@ -39,8 +39,6 @@ public class UI_Inventory : UI_Base
 
     void Update()
     {
-        if (mainCanvas == null) Debug.Log("1"); 
-
         if (dragIcon.enabled)
         {
             Vector2 pos;
@@ -72,7 +70,7 @@ public class UI_Inventory : UI_Base
 
     public void Refresh()
     {
-        // 1) 모든 슬롯 일단 sync만 한다 (데이터 유지)
+        // 슬롯 데이터 유지
         foreach (var part in parts)
         {
             if (part.data == null) continue;
@@ -88,7 +86,7 @@ public class UI_Inventory : UI_Base
             }
         }
 
-        // 2) dict에 있는데 UI에 없는 아이템을 추가
+        // dict에 있는데 UI에 없는 아이템 추가
         foreach (var kv in itemData.ItemDictionary)
         {
             var item = kv.Key;
@@ -96,11 +94,11 @@ public class UI_Inventory : UI_Base
 
             if (count <= 0) continue;
 
-            // Skip: 이미 슬롯에 존재하는 아이템
+            // 이미 슬롯에 존재하는 아이템 스킵
             bool exists = parts.Any(p => p.data == item);
             if (exists) continue;
 
-            // Empty slot 찾아서 배치
+            // 빈 슬롯 찾아서 배치
             var empty = parts.FirstOrDefault(p => p.data == null);
             if (empty != null)
             {
@@ -148,18 +146,20 @@ public class UI_Inventory : UI_Base
         if (part.icon == null || part.icon.sprite == null) return;
 
         dragIcon.sprite = part.icon.sprite;
+        dragIcon.color = part.icon.color;
+
         dragIcon.enabled = true;
 
         dragCountText.text = part.count > 1 ? part.count.ToString() : "";
         dragCountText.enabled = true;
 
         part.icon.enabled = false;
-        part.countText.text = "";       
+        part.countText.text = "";
     }
 
 
     // 선택 해제 시 복원
-    private void StopDragIcon()
+    void StopDragIcon()
     {
         if (selectedPart != null)
         {
@@ -174,6 +174,7 @@ public class UI_Inventory : UI_Base
         }
 
         dragIcon.enabled = false;
+        dragIcon.color = Color.white;
         dragCountText.enabled = false;
     }
 }

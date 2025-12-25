@@ -57,9 +57,9 @@ public class SkillShopProduct : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 GameMgr.inst.userData.GameMoney -= skillData.price;
 
                 // 스킬 획득 반영
-                SkillUIMgr.inst.AcquireSkills();
+                //SkillUIMgr.inst.AcquireSkills();
 
-                UIManager.inst.GetToast().Init("ESC키를 눌러 새로운 스킬을 등록하세요!", Color.white);
+                UIManager.inst.GetToast().Init("새로운 스킬을 등록하세요!", Color.white);
             }
         }
     }
