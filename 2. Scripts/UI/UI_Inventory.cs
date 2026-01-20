@@ -5,17 +5,20 @@ using UnityEngine.UI;
 
 public class UI_Inventory : UI_Base
 {
-    [SerializeField] private ItemDB itemData;     //긁어올 item DataBase Storage
-    [SerializeField] private Transform slotParent; // 슬롯 50개 존재
-    [SerializeField] private GameObject partPrefab;
-    [SerializeField] private Canvas mainCanvas; // 마우스 아이콘 표시용
+    [SerializeField] ItemDB itemData;
+    [SerializeField] Transform slotParent;
+    [SerializeField] GameObject partPrefab;
+    [SerializeField] Canvas mainCanvas;
 
-    private List<Inventory_Parts> parts = new();
-    private Inventory_Parts selectedPart = null;
+    List<Inventory_Parts> parts = new();
+    Inventory_Parts selectedPart = null;
 
-    [SerializeField] private Image dragIcon;
-    [SerializeField] private Text dragCountText;
-    [SerializeField] private RectTransform dragRect;
+    [SerializeField] Image dragIcon;
+    [SerializeField] Text dragCountText;
+    [SerializeField] RectTransform dragRect;
+
+    [SerializeField] GameObject ghostPrefab; // Image + CountText 포함
+    GameObject ghostObj;
 
     [SerializeField] Text MoneyText;
 
@@ -24,7 +27,6 @@ public class UI_Inventory : UI_Base
     void Awake()
     {
         inst = this;
-
         mainCanvas = GameMgr.inst.canvas;
 
         for (int i = 0; i < slotParent.childCount; i++)
@@ -39,15 +41,21 @@ public class UI_Inventory : UI_Base
 
     void Update()
     {
-        if (dragIcon.enabled)
+        if (!dragIcon.enabled) return;
+
+        Vector2 pos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            mainCanvas.transform as RectTransform,
+            Input.mousePosition,
+            mainCanvas.worldCamera,
+            out pos);
+        dragRect.anchoredPosition = pos;
+
+        // 슬롯 아닌 곳 클릭 시 실패 처리
+        if (Input.GetMouseButtonDown(0))
         {
-            Vector2 pos;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                mainCanvas.transform as RectTransform,
-                Input.mousePosition,
-                mainCanvas.worldCamera,
-                out pos);
-            dragRect.anchoredPosition = pos;
+            if (!IsPointerOverSlot())
+                CancelDrag();
         }
     }
 
@@ -70,40 +78,27 @@ public class UI_Inventory : UI_Base
 
     public void Refresh()
     {
-        // 슬롯 데이터 유지
         foreach (var part in parts)
         {
             if (part.data == null) continue;
 
             if (itemData.ItemDictionary.TryGetValue(part.data, out int count))
-            {
                 part.Init(part.data, count);
-            }
             else
-            {
-                // 해당 아이템이 dict에 없다 = 0개
                 part.Init(null, 0);
-            }
         }
 
-        // dict에 있는데 UI에 없는 아이템 추가
         foreach (var kv in itemData.ItemDictionary)
         {
             var item = kv.Key;
             var count = kv.Value;
-
             if (count <= 0) continue;
 
-            // 이미 슬롯에 존재하는 아이템 스킵
-            bool exists = parts.Any(p => p.data == item);
-            if (exists) continue;
+            if (parts.Any(p => p.data == item)) continue;
 
-            // 빈 슬롯 찾아서 배치
             var empty = parts.FirstOrDefault(p => p.data == null);
             if (empty != null)
-            {
                 empty.Init(item, count);
-            }
         }
     }
 
@@ -119,35 +114,41 @@ public class UI_Inventory : UI_Base
 
         if (clickedPart == selectedPart)
         {
-            StopDragIcon();
-            selectedPart = null;
+            CancelDrag();
             return;
         }
 
         Swap(selectedPart, clickedPart);
-
-        StopDragIcon();
-        selectedPart = null;
+        EndDrag();
     }
 
-    private void Swap(Inventory_Parts a, Inventory_Parts b)
+    void Swap(Inventory_Parts a, Inventory_Parts b)
     {
         var tempData = a.data;
         var tempCount = a.count;
-
         a.Init(b.data, b.count);
         b.Init(tempData, tempCount);
     }
 
-
-    // 선택 시 아이콘 마우스에 붙이고 슬롯에선 숨김
     void StartDragIcon(Inventory_Parts part)
     {
         if (part.icon == null || part.icon.sprite == null) return;
 
+        ghostObj = Instantiate(ghostPrefab, part.transform);
+        var ghostIcon = ghostObj.GetComponentInChildren<Image>();
+        var ghostText = ghostObj.GetComponentInChildren<Text>();
+
+        ghostIcon.sprite = part.icon.sprite;
+
+        var baseColor = part.icon.color;
+        ghostIcon.color = new Color(baseColor.r, baseColor.g, baseColor.b, 0.4f);
+
+        ghostText.text = part.count > 1 ? part.count.ToString() : "";
+
+        ghostObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
         dragIcon.sprite = part.icon.sprite;
         dragIcon.color = part.icon.color;
-
         dragIcon.enabled = true;
 
         dragCountText.text = part.count > 1 ? part.count.ToString() : "";
@@ -157,24 +158,38 @@ public class UI_Inventory : UI_Base
         part.countText.text = "";
     }
 
-
-    // 선택 해제 시 복원
-    void StopDragIcon()
+    void EndDrag()
     {
+        if (ghostObj != null)
+            Destroy(ghostObj);
+
         if (selectedPart != null)
         {
-            if (selectedPart.icon != null)
-                selectedPart.icon.enabled = true;
-
-            if (selectedPart.countText != null)
-            {
-                selectedPart.countText.text =
-                    selectedPart.count > 1 ? selectedPart.count.ToString() : "";
-            }
+            selectedPart.icon.enabled = true;
+            selectedPart.countText.text =
+                selectedPart.count > 1 ? selectedPart.count.ToString() : "";
         }
 
         dragIcon.enabled = false;
-        dragIcon.color = Color.white;
         dragCountText.enabled = false;
+        selectedPart = null;
+    }
+
+    void CancelDrag()
+    {
+        EndDrag(); // 데이터 변화 없이 복귀
+    }
+
+    bool IsPointerOverSlot()
+    {
+        foreach (var p in parts)
+        {
+            if (RectTransformUtility.RectangleContainsScreenPoint(
+                p.GetComponent<RectTransform>(),
+                Input.mousePosition,
+                mainCanvas.worldCamera))
+                return true;
+        }
+        return false;
     }
 }
